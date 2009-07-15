@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Jul 15, 2009 12:09:35 PM                                                        
+
+     ID3TagMan    
+     This script makes distribution of this application.
+                   
+     yeoupooh                                                                
+     ====================================================================== -->
+<project name="ID3TagMan" default="default">
+	<description>
+            This script makes distribution of this application.
+    </description>
+
+	<property name="app.name" value="ID3TagMan" />
+	<property name="app.version" value="0.1" />
+
+	<property name="src.dir" value="src" />
+	<property name="lib.dir" value="lib" />
+	<property name="scripts.dir" value="scripts" />
+	<property name="images.dir" value="images" />
+
+	<property name="build.dir" value="build" />
+	<property name="dist.dir" value="dist" />
+	<property name="dist.app.dir" value="${dist.dir}/${app.name}-${app.version}" />
+	<property name="dist.lib.dir" value="${dist.app.dir}/lib" />
+	<property name="dist.images.dir" value="${dist.app.dir}/images" />
+	<property name="jar.file" value="${dist.lib.dir}/${app.name}.jar" />
+
+	<fileset dir="${lib.dir}" id="lib.files">
+		<include name="*.jar" />
+	</fileset>
+
+	<fileset dir="${scripts.dir}" id="scripts.files">
+		<include name="*.sh" />
+	</fileset>
+
+	<fileset dir="${images.dir}" id="image.files" />
+
+	<path id="classpath">
+		<dirset dir="${src.dir}" />
+		<fileset refid="lib.files" />
+	</path>
+
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+	<target name="default" depends="clean, dist" description="This script makes distribution of this application.">
+
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: depends                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="compile">
+		<mkdir dir="${build.dir}" />
+
+		<javac classpathref="classpath" excludes="**/test/*" srcdir="${src.dir}" destdir="${build.dir}">
+		</javac>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: jar                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="jar" depends="compile">
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.app.dir}" />
+		<mkdir dir="${dist.lib.dir}" />
+
+		<jar destfile="${jar.file}">
+			<fileset dir="${build.dir}" />
+		</jar>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: dist                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="dist" depends="jar">
+		<copy todir="${dist.lib.dir}">
+
+			<fileset refid="lib.files" />
+		</copy>
+
+		<copy todir="${dist.app.dir}">
+			<fileset refid="scripts.files" />
+		</copy>
+
+		<chmod perm="u+x">
+			<fileset dir="${dist.app.dir}">
+				<include name="*.sh" />
+			</fileset>
+		</chmod>
+
+		<copy todir="${dist.images.dir}">
+			<fileset refid="image.files" />
+		</copy>
+
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: clean                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+</project>

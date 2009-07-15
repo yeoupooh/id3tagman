@@ -10,13 +10,19 @@ import net.eclipseforum.id3tagman.handler.TagPropertyException;
 import net.eclipseforum.id3tagman.util.StringConverter;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -38,6 +44,8 @@ public class ID3TagManGUI implements SelectionListener {
 	private ToolItem itemConvert = null;
 	private ToolItem itemSelectAll = null;
 	private ToolItem itemUnselectAll = null;
+	private ToolItem itemAbout = null;
+	private Label labelStatus = null;
 
 	private TagProperty[] tagProperties = new TagProperty[] {
 			new TagProperty(TagProperty.IDs.FileName, "File name", 200),
@@ -79,14 +87,43 @@ public class ID3TagManGUI implements SelectionListener {
 		display.dispose();
 	}
 
+	private ToolItem addToolItem(int style, String text, String imageFilename) {
+		ToolItem item = new ToolItem(toolBar, style);
+		item.setText(text);
+		item.addSelectionListener(this);
+		try {
+			Image image = new Image(sShell.getDisplay(), imageFilename);
+			if (image != null) {
+				item.setImage(image);
+			}
+		} catch (SWTException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return item;
+	}
+
 	/**
 	 * This method initializes sShell
 	 */
 	private void createSShell() {
 		sShell = new Shell();
+		sShell.setImage(new Image(sShell.getDisplay(),
+				"images/coffee_cup_128.png"));
 		sShell.setText(Constants.APP_NAME + " " + Constants.APP_VERSION);
-		sShell.setSize(new Point(800, 600));
+		sShell.setSize(new Point(1000, 700));
 		sShell.setLayout(new GridLayout());
+
+		Menu menu = new Menu(sShell, SWT.BAR);
+		MenuItem miFileHeader = new MenuItem(menu, SWT.CASCADE);
+		miFileHeader.setText("&File");
+
+		Menu miFile = new Menu(sShell, SWT.DROP_DOWN);
+		miFileHeader.setMenu(miFile);
+
+		sShell.setMenuBar(menu);
 
 		toolBar = new ToolBar(sShell, SWT.FLAT | SWT.WRAP | SWT.RIGHT);
 		GridData gridDataToolBar = new GridData();
@@ -94,27 +131,17 @@ public class ID3TagManGUI implements SelectionListener {
 		gridDataToolBar.grabExcessHorizontalSpace = true;
 		toolBar.setLayoutData(gridDataToolBar);
 
-		itemBrowse = new ToolItem(toolBar, SWT.PUSH);
-		itemBrowse.setText("Browse...");
-		// Image icon = new Image(sShell.getDisplay(), "icons/new.gif");
-		itemBrowse.addSelectionListener(this);
-		// itemPush.setImage(icon);
-
-		itemPreview = new ToolItem(toolBar, SWT.CHECK);
-		itemPreview.setText("Preview");
-		itemPreview.addSelectionListener(this);
-
-		itemConvert = new ToolItem(toolBar, SWT.PUSH);
-		itemConvert.setText("Convert");
-		itemConvert.addSelectionListener(this);
-
-		itemSelectAll = new ToolItem(toolBar, SWT.PUSH);
-		itemSelectAll.setText("Select All");
-		itemSelectAll.addSelectionListener(this);
-
-		itemUnselectAll = new ToolItem(toolBar, SWT.PUSH);
-		itemUnselectAll.setText("Unselect All");
-		itemUnselectAll.addSelectionListener(this);
+		itemBrowse = addToolItem(SWT.PUSH, "Browse...",
+				"images/folder_full_64.png");
+		itemPreview = addToolItem(SWT.CHECK, "Preview",
+				"images/light_bulb_64.png");
+		itemSelectAll = addToolItem(SWT.PUSH, "Select All",
+				"images/accept_page_64.png");
+		itemUnselectAll = addToolItem(SWT.PUSH, "Unselect All",
+				"images/full_page_64.png");
+		itemConvert = addToolItem(SWT.PUSH, "Convert...",
+				"images/target_64.png");
+		itemAbout = addToolItem(SWT.PUSH, "Coffee?", "images/coffee_cup_64.png");
 
 		textFolder = new Text(sShell, SWT.NONE);
 		GridData gridDataTextFolder = new GridData();
@@ -137,9 +164,6 @@ public class ID3TagManGUI implements SelectionListener {
 
 		table = new Table(sShell, SWT.CHECK | SWT.BORDER | SWT.FULL_SELECTION);
 
-		// table.setLinesVisible(true);
-		table.setHeaderVisible(true);
-
 		for (int i = 0; i < tagProperties.length; i++) {
 			TagProperty prop = tagProperties[i];
 			TableColumn tc = new TableColumn(table, SWT.LEFT);
@@ -147,11 +171,23 @@ public class ID3TagManGUI implements SelectionListener {
 			tc.setWidth(prop.getWidth());
 		}
 
+		// table.setLinesVisible(true);
+		table.setHeaderVisible(true);
+
 		table.setLayoutData(new GridData(GridData.FILL_BOTH));
 		table.pack();
+
+		labelStatus = new Label(sShell, SWT.None);
+		GridData gdLabelStatus = new GridData();
+		gdLabelStatus.grabExcessHorizontalSpace = true;
+		gdLabelStatus.horizontalAlignment = GridData.FILL;
+		labelStatus.setLayoutData(gdLabelStatus);
+		labelStatus.setText("Ready.");
 	}
 
 	private void updateTable() {
+		setStatusMessage("Loading files...");
+
 		boolean doConvert = itemPreview.getSelection();
 		table.removeAll();
 
@@ -201,6 +237,8 @@ public class ID3TagManGUI implements SelectionListener {
 				e1.printStackTrace();
 			}
 		}
+
+		setStatusMessage("Files loaded.");
 	}
 
 	public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -219,7 +257,15 @@ public class ID3TagManGUI implements SelectionListener {
 			checkAll(true);
 		} else if (evt.getSource() == itemUnselectAll) {
 			checkAll(false);
+		} else if (evt.getSource() == itemAbout) {
+			about();
 		}
+	}
+
+	private void about() {
+		MessageBox mbox = new MessageBox(sShell);
+		mbox.setMessage("made by yeoupooh at gmail.com");
+		mbox.open();
 	}
 
 	private void browse() {
@@ -243,6 +289,7 @@ public class ID3TagManGUI implements SelectionListener {
 			TableItem item = table.getItem(i);
 			if (item.getChecked() == true) {
 				File file = (File) item.getData();
+				setStatusMessage("Converting..." + file.getName());
 				try {
 					handler.load(file);
 					for (int j = 0; j < tagProperties.length; j++) {
@@ -260,6 +307,7 @@ public class ID3TagManGUI implements SelectionListener {
 				} catch (TagPropertyException e) {
 					e.printStackTrace();
 				}
+				setStatusMessage(file.getName() + " is converted.");
 			}
 		}
 	}
@@ -268,5 +316,9 @@ public class ID3TagManGUI implements SelectionListener {
 		for (int i = 0; i < table.getItemCount(); i++) {
 			table.getItem(i).setChecked(checked);
 		}
+	}
+
+	private void setStatusMessage(String message) {
+		labelStatus.setText(message);
 	}
 }

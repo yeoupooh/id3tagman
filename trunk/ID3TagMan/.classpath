@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/jid3lib-0.5.4.jar"/>
+	<classpathentry kind="lib" path="lib/myid3.jar"/>
+	<classpathentry kind="lib" path="lib/java_mp3.jar"/>
+	<classpathentry kind="con" path="SWT_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

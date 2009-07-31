@@ -67,6 +67,11 @@ public class ID3TagManGUI implements SelectionListener {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		{
+			File file = new File("./");
+			System.out.println("path=" + file.getAbsolutePath());
+			System.out.println("BASEDIR=" + System.getProperty("app.root"));
+		}
 		// TODO Auto-generated method stub
 		/*
 		 * Before this is run, be sure to set up the launch configuration
@@ -87,12 +92,24 @@ public class ID3TagManGUI implements SelectionListener {
 		display.dispose();
 	}
 
+	private Image getImage(String imageFilename) throws SWTException {
+		try {
+			Image image = new Image(sShell.getDisplay(), System
+					.getProperty("app.root"));
+			return image;
+		} catch (SWTException e) {
+			throw e;
+		}
+	}
+
 	private ToolItem addToolItem(int style, String text, String imageFilename) {
 		ToolItem item = new ToolItem(toolBar, style);
 		item.setText(text);
 		item.addSelectionListener(this);
 		try {
-			Image image = new Image(sShell.getDisplay(), imageFilename);
+			Image image = new Image(sShell.getDisplay(), System
+					.getProperty("app.root")
+					+ "/" + imageFilename);
 			if (image != null) {
 				item.setImage(image);
 			}
@@ -110,8 +127,13 @@ public class ID3TagManGUI implements SelectionListener {
 	 */
 	private void createSShell() {
 		sShell = new Shell();
-		sShell.setImage(new Image(sShell.getDisplay(),
-				"images/coffee_cup_128.png"));
+		try {
+			sShell.setImage(new Image(sShell.getDisplay(), System
+					.getProperty("app.root")
+					+ "/images/coffee_cup_128.png"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		sShell.setText(Constants.APP_NAME + " " + Constants.APP_VERSION);
 		sShell.setSize(new Point(1000, 700));
 		sShell.setLayout(new GridLayout());

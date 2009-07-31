@@ -5,8 +5,8 @@
 	<classpathentry kind="lib" path="lib/jid3lib-0.5.4.jar"/>
 	<classpathentry kind="lib" path="lib/myid3.jar"/>
 	<classpathentry kind="lib" path="lib/java_mp3.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.swt_3.4.1.v3449c.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.swt.carbon.macosx_3.4.1.v3449c.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.swt.cocoa.macosx_3.5.0.v3550b.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.swt_3.5.0.v3550b.jar"/>
 	<classpathentry kind="con" path="SWT_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -14,5 +14,4 @@ done
 echo CLASSPATH=$CLASSPATH
 echo JAVA_HOME=$JAVA_HOME
 
-java -cp $CLASSPATH $JVM_OPTS $MAIN_CLASS >> apps.log &
-
+java -cp $CLASSPATH $JVM_OPTS $MAIN_CLASS

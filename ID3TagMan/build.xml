@@ -27,6 +27,20 @@
 	<property name="dist.images.dir" value="${dist.app.dir}/images" />
 	<property name="jar.file" value="${dist.lib.dir}/${app.name}.jar" />
 
+	<property name="mac.dir" value="mac/${app.name}.app/Contents" />
+	<property name="mac.resources.dir" value="${mac.dir}/Resources" />
+	<property name="mac.info.plist.file" value="${mac.dir}/Info.plist" />
+
+	<property name="dist.mac.dir" value="${dist.dir}/mac" />
+	<property name="dist.mac.app.dir" value="${dist.mac.dir}/${app.name}.app" />
+	<property name="dist.mac.contents.dir" value="${dist.mac.app.dir}/Contents/" />
+	<property name="dist.mac.macos.dir" value="${dist.mac.contents.dir}/MacOS" />
+	<property name="dist.mac.resources.dir" value="${dist.mac.contents.dir}/Resources" />
+	<property name="dist.mac.lib.dir" value="${dist.mac.macos.dir}/lib" />
+	<property name="dist.mac.images.dir" value="${dist.mac.macos.dir}/images" />
+	<property name="dist.zip.file" value="${dist.dir}/${app.name}-${app.version}.zip" />
+	<property name="dist.tar.gz.file" value="${dist.dir}/${app.name}-${app.version}.tar.gz" />
+
 	<fileset dir="${lib.dir}" id="lib.files">
 		<include name="*.jar" />
 	</fileset>
@@ -76,6 +90,7 @@
           target: dist                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="dist" depends="jar">
+
 		<copy todir="${dist.lib.dir}">
 
 			<fileset refid="lib.files" />
@@ -94,6 +109,52 @@
 		<copy todir="${dist.images.dir}">
 			<fileset refid="image.files" />
 		</copy>
+
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: dist-mac                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="dist-mac" depends="dist">
+
+		<mkdir dir="${dist.mac.contents.dir}" />
+		<mkdir dir="${dist.mac.macos.dir}" />
+		<mkdir dir="${dist.mac.resources.dir}" />
+		<mkdir dir="${dist.mac.images.dir}" />
+		<mkdir dir="${dist.mac.lib.dir}" />
+
+		<copy todir="${dist.mac.lib.dir}">
+			<fileset dir="${dist.lib.dir}" />
+		</copy>
+
+		<copy todir="${dist.mac.macos.dir}">
+			<fileset refid="scripts.files" />
+		</copy>
+
+		<copy file="${scripts.dir}/run" todir="${dist.mac.macos.dir}" />
+
+		<chmod perm="u+x">
+			<fileset dir="${dist.mac.macos.dir}">
+				<include name="*" />
+			</fileset>
+		</chmod>
+
+		<copy todir="${dist.mac.images.dir}">
+			<fileset refid="image.files" />
+		</copy>
+
+
+		<copy todir="${dist.mac.resources.dir}">
+			<fileset dir="${mac.resources.dir}" />
+		</copy>
+		<copy file="${mac.info.plist.file}" todir="${dist.mac.contents.dir}" />
+
+		<tar destfile="${dist.tar.gz.file}" compression="gzip">
+			<tarfileset dir="${dist.mac.dir}">
+				<exclude name="**/run" />
+			</tarfileset>
+			<tarfileset filemode="700" file="${dist.mac.macos.dir}/run" prefix="${app.name}.app/Contents/MacOS" />
+		</tar>
 
 	</target>
 

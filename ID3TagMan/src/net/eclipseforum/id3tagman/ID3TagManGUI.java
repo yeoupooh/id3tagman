@@ -92,16 +92,6 @@ public class ID3TagManGUI implements SelectionListener {
 		display.dispose();
 	}
 
-	private Image getImage(String imageFilename) throws SWTException {
-		try {
-			Image image = new Image(sShell.getDisplay(), System
-					.getProperty("app.root"));
-			return image;
-		} catch (SWTException e) {
-			throw e;
-		}
-	}
-
 	private ToolItem addToolItem(int style, String text, String imageFilename) {
 		ToolItem item = new ToolItem(toolBar, style);
 		item.setText(text);

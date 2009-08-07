@@ -7,6 +7,9 @@
 	<classpathentry kind="lib" path="lib/java_mp3.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.swt.cocoa.macosx_3.5.0.v3550b.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.swt_3.5.0.v3550b.jar"/>
+	<classpathentry kind="lib" path="lib/jaudiotagger.jar"/>
+	<classpathentry kind="lib" path="lib/JID3.jar"/>
+	<classpathentry kind="lib" path="lib/jl1.0.1.jar"/>
 	<classpathentry kind="con" path="SWT_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -3,16 +3,16 @@ package net.eclipseforum.id3tagman.handler;
 import java.io.File;
 import java.io.IOException;
 
+import net.eclipseforum.id3tagman.TagProperty.IDs;
+
 import org.farng.mp3.MP3File;
 import org.farng.mp3.TagException;
-
-import net.eclipseforum.id3tagman.TagProperty.IDs;
 
 /**
  * http://javamusictag.sourceforge.net/
  * 
  * @author yeoupooh
- *
+ * 
  */
 public class Jid3libTagHandler implements ITagHandler {
 
@@ -130,6 +130,10 @@ public class Jid3libTagHandler implements ITagHandler {
 
 	public void setProperty(IDs id, String value) throws TagPropertyException {
 		// TODO Auto-generated method stub
+	}
+
+	public String getName() {
+		return "Java ID3 Tag Library";
 	}
 
 }

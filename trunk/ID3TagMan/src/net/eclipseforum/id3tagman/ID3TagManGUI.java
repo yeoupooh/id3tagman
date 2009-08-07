@@ -5,6 +5,7 @@ import java.io.FileFilter;
 
 import net.eclipseforum.id3tagman.handler.ITagHandler;
 import net.eclipseforum.id3tagman.handler.Javamp3TagHandler;
+import net.eclipseforum.id3tagman.handler.Jid3libTagHandler;
 import net.eclipseforum.id3tagman.handler.TagHandlerException;
 import net.eclipseforum.id3tagman.handler.TagPropertyException;
 import net.eclipseforum.id3tagman.util.StringConverter;
@@ -17,6 +18,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -46,6 +48,7 @@ public class ID3TagManGUI implements SelectionListener {
 	private ToolItem itemUnselectAll = null;
 	private ToolItem itemAbout = null;
 	private Label labelStatus = null;
+	private Combo comboHandler = null;
 
 	private TagProperty[] tagProperties = new TagProperty[] {
 			new TagProperty(TagProperty.IDs.FileName, "File name", 200),
@@ -58,9 +61,12 @@ public class ID3TagManGUI implements SelectionListener {
 			new TagProperty(TagProperty.IDs.Authors, "Authors", 80),
 			new TagProperty(TagProperty.IDs.Comment, "Comment", 80) };
 
-	// ITagHandler handler = new Jid3libTagHandler();
-	// ITagHandler handler = new Myid3TagHandler();
-	ITagHandler handler = new Javamp3TagHandler();
+	private ITagHandler[] handlers = { new Javamp3TagHandler(),
+			new Jid3libTagHandler()
+	// , new JaudiotaggerTagHandler()
+	// new Myid3TagHandler()
+	};
+	private ITagHandler currentHandler = null;
 
 	/**
 	 * 
@@ -80,9 +86,9 @@ public class ID3TagManGUI implements SelectionListener {
 		 * For example, on Windows the Eclipse SWT 3.1 plugin jar is:
 		 * installation_directory\plugins\org.eclipse.swt.win32_3.1.0.jar
 		 */
-		Display display = Display.getDefault();
+		Display display = new Display();
 		ID3TagManGUI thisClass = new ID3TagManGUI();
-		thisClass.createSShell();
+		thisClass.createSShell(display);
 		thisClass.sShell.open();
 
 		while (!thisClass.sShell.isDisposed()) {
@@ -115,8 +121,8 @@ public class ID3TagManGUI implements SelectionListener {
 	/**
 	 * This method initializes sShell
 	 */
-	private void createSShell() {
-		sShell = new Shell();
+	private void createSShell(Display display) {
+		sShell = new Shell(display);
 		try {
 			sShell.setImage(new Image(sShell.getDisplay(), System
 					.getProperty("app.root")
@@ -162,6 +168,14 @@ public class ID3TagManGUI implements SelectionListener {
 		textFolder.setLayoutData(gridDataTextFolder);
 		textFolder.pack();
 
+		comboHandler = new Combo(sShell, SWT.READ_ONLY);
+		for (int j = 0; j < handlers.length; j++) {
+			comboHandler.add(handlers[j].getName());
+		}
+		comboHandler.select(0);
+		setHandler(0);
+		comboHandler.addSelectionListener(this);
+
 		textSrcEncoding = new Text(sShell, SWT.NONE);
 		textSrcEncoding.setLayoutData(gridDataTextFolder);
 		textSrcEncoding.setText("iso-8859-1");
@@ -197,6 +211,10 @@ public class ID3TagManGUI implements SelectionListener {
 		labelStatus.setText("Ready.");
 	}
 
+	private void setHandler(int index) {
+		currentHandler = handlers[index];
+	}
+
 	private void updateTable() {
 		setStatusMessage("Loading files...");
 
@@ -216,13 +234,13 @@ public class ID3TagManGUI implements SelectionListener {
 					.getText(), textDestEncoding.getText());
 
 			try {
-				handler.load(file);
+				currentHandler.load(file);
 				for (int j = 0; j < tagProperties.length; j++) {
 					TagProperty prop = tagProperties[j];
 					String value = null;
 					String convValue = null;
 					try {
-						value = handler.getProperty(prop.getId());
+						value = currentHandler.getProperty(prop.getId());
 					} catch (TagPropertyException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -271,6 +289,8 @@ public class ID3TagManGUI implements SelectionListener {
 			checkAll(false);
 		} else if (evt.getSource() == itemAbout) {
 			about();
+		} else if (evt.getSource() == comboHandler) {
+			setHandler(comboHandler.getSelectionIndex());
 		}
 	}
 
@@ -303,17 +323,17 @@ public class ID3TagManGUI implements SelectionListener {
 				File file = (File) item.getData();
 				setStatusMessage("Converting..." + file.getName());
 				try {
-					handler.load(file);
+					currentHandler.load(file);
 					for (int j = 0; j < tagProperties.length; j++) {
 						TagProperty prop = tagProperties[j];
 						System.out.println(prop.getId() + "="
 								+ item.getText(prop.getId().index()));
 						if (item.getText(prop.getId().index()) != null) {
-							handler.setProperty(prop.getId(), item.getText(prop
-									.getId().index()));
+							currentHandler.setProperty(prop.getId(), item
+									.getText(prop.getId().index()));
 						}
 					}
-					handler.save();
+					currentHandler.save();
 				} catch (TagHandlerException e) {
 					e.printStackTrace();
 				} catch (TagPropertyException e) {

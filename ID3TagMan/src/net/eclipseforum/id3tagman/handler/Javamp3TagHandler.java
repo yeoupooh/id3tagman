@@ -19,7 +19,7 @@ import de.vdheide.mp3.TagFormatException;
  * http://developer.berlios.de/projects/javamp3/
  * 
  * @author yeoupooh
- *
+ * 
  */
 public class Javamp3TagHandler implements ITagHandler {
 
@@ -158,6 +158,10 @@ public class Javamp3TagHandler implements ITagHandler {
 			}
 
 		}
+	}
+
+	public String getName() {
+		return "java_mp3";
 	}
 
 }

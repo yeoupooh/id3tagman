@@ -10,11 +10,10 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 /**
- * NOT WORKING PROPERLY
- * http://www.fightingquaker.com/myid3/
+ * NOT WORKING PROPERLY http://www.fightingquaker.com/myid3/
  * 
  * @author yeoupooh
- *
+ * 
  */
 public class Myid3TagHandler implements ITagHandler {
 
@@ -89,6 +88,10 @@ public class Myid3TagHandler implements ITagHandler {
 
 	public void setProperty(IDs id, String value) throws TagPropertyException {
 		// TODO Auto-generated method stub
+	}
+
+	public String getName() {
+		return "(NOT WORKING) MyID3: a Java ID3 Tag Library.";
 	}
 
 }

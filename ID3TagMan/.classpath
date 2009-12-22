@@ -4,12 +4,12 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jid3lib-0.5.4.jar"/>
 	<classpathentry kind="lib" path="lib/myid3.jar"/>
-	<classpathentry kind="lib" path="lib/java_mp3.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.swt.cocoa.macosx_3.5.0.v3550b.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.swt_3.5.0.v3550b.jar"/>
 	<classpathentry kind="lib" path="lib/jaudiotagger.jar"/>
 	<classpathentry kind="lib" path="lib/JID3.jar"/>
 	<classpathentry kind="lib" path="lib/jl1.0.1.jar"/>
 	<classpathentry kind="con" path="SWT_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/javamp3"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

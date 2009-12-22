@@ -18,6 +18,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
@@ -126,7 +127,7 @@ public class ID3TagManGUI implements SelectionListener {
 		try {
 			sShell.setImage(new Image(sShell.getDisplay(), System
 					.getProperty("app.root")
-					+ "/images/coffee_cup_128.png"));
+					+ "/images/tag_green_128.png"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -159,7 +160,7 @@ public class ID3TagManGUI implements SelectionListener {
 				"images/full_page_64.png");
 		itemConvert = addToolItem(SWT.PUSH, "Convert...",
 				"images/target_64.png");
-		itemAbout = addToolItem(SWT.PUSH, "Coffee?", "images/coffee_cup_64.png");
+		itemAbout = addToolItem(SWT.PUSH, "Twitter", "images/comment_64.png");
 
 		textFolder = new Text(sShell, SWT.NONE);
 		GridData gridDataTextFolder = new GridData();
@@ -295,9 +296,12 @@ public class ID3TagManGUI implements SelectionListener {
 	}
 
 	private void about() {
-		MessageBox mbox = new MessageBox(sShell);
-		mbox.setMessage("made by yeoupooh at gmail.com");
-		mbox.open();
+		MessageBox mbox = new MessageBox(sShell, SWT.ICON_QUESTION | SWT.YES
+				| SWT.NO);
+		mbox.setMessage("Do you want to go Developer's twitter?");
+		if (mbox.open() == SWT.YES) {
+			Program.launch("http://twitter.com/yeoupooh");
+		}
 	}
 
 	private void browse() {
@@ -316,10 +320,22 @@ public class ID3TagManGUI implements SelectionListener {
 		}
 	}
 
+	private void showMessageBox(int style, String message) {
+		MessageBox msgBox = new MessageBox(sShell, style);
+		msgBox.setText("ID3TagMan");
+		msgBox.setMessage(message);
+		msgBox.open();
+	}
+
+	private void showErrorMessageBox(Exception e) {
+		showMessageBox(SWT.ICON_ERROR, "Error: " + e.getMessage());
+	}
+
 	private void convert() {
 		for (int i = 0; i < table.getItemCount(); i++) {
 			TableItem item = table.getItem(i);
 			if (item.getChecked() == true) {
+				boolean isSuccess = false;
 				File file = (File) item.getData();
 				setStatusMessage("Converting..." + file.getName());
 				try {
@@ -334,12 +350,20 @@ public class ID3TagManGUI implements SelectionListener {
 						}
 					}
 					currentHandler.save();
+					isSuccess = true;
 				} catch (TagHandlerException e) {
 					e.printStackTrace();
+					showErrorMessageBox(e);
 				} catch (TagPropertyException e) {
 					e.printStackTrace();
+					showErrorMessageBox(e);
 				}
-				setStatusMessage(file.getName() + " is converted.");
+
+				if (isSuccess == true) {
+					setStatusMessage(file.getName() + " is converted.");
+				} else {
+					setStatusMessage("Failed to convert " + file.getName());
+				}
 			}
 		}
 	}

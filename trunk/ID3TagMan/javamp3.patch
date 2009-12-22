@@ -1,0 +1,1958 @@
+Index: build.xml
+===================================================================
+--- build.xml	(revision 20)
++++ build.xml	(working copy)
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project name="java_mp3.makejar" default="makejar" basedir=".">
+ 	
+-	<property name="java_mp3.version" value="0.4"/>
++	<property name="java_mp3.version" value="0.4.fix1ByYeouPooh"/>
+ 
+ 	<target name="javadoc">
+         <javadoc access="public" author="true" classpath="C:\Program Files (x86)\eclipse\plugins\org.junit_3.8.2.v20080602-1318\junit.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="de.vdheide.utils" source="1.3" sourcefiles="src/de/vdheide/mp3/ID3IllegalFormatException.java,src/de/vdheide/mp3/ParseException.java,src/de/vdheide/mp3/ID3v2IllegalVersionException.java,src/de/vdheide/mp3/ID3v2Header.java,src/de/vdheide/mp3/NoMP3FrameException.java,src/de/vdheide/mp3/NoID3TagException.java,src/de/vdheide/mp3/Parser.java,src/de/vdheide/mp3/NoID3v2HeaderException.java,src/de/vdheide/mp3/TagContent.java,src/de/vdheide/mp3/ID3v2DecompressionException.java,src/de/vdheide/mp3/TagFormatException.java,src/de/vdheide/mp3/ID3v2Frame.java,src/de/vdheide/mp3/MP3File.java,src/de/vdheide/mp3/ID3v2ExtendedHeader.java,src/de/vdheide/mp3/ID3v2.java,src/de/vdheide/mp3/Frame.java,src/de/vdheide/mp3/ID3v2WrongCRCException.java,src/de/vdheide/mp3/FrameDamagedException.java,src/de/vdheide/mp3/ID3v2NoSuchFrameException.java,src/de/vdheide/mp3/ID3v2Exception.java,src/de/vdheide/mp3/TextFrame.java,src/de/vdheide/mp3/TextFrameEncoding.java,src/de/vdheide/mp3/MP3Properties.java,src/de/vdheide/mp3/ID3Exception.java,src/de/vdheide/mp3/BinaryFrame.java,src/de/vdheide/mp3/ByteBuilder.java,src/de/vdheide/mp3/TextFrameNoEncoding.java,src/de/vdheide/mp3/NoID3v2TagException.java,src/de/vdheide/mp3/ID3.java" sourcepath="src;test" splitindex="true" use="true" version="true">
+Index: src/de/vdheide/mp3/MP3File.java
+===================================================================
+--- src/de/vdheide/mp3/MP3File.java	(revision 20)
++++ src/de/vdheide/mp3/MP3File.java	(working copy)
+@@ -57,15 +57,18 @@
+ 	 * Creates a new instance. Tag information is completely read the first time
+ 	 * it is requested and written after <code>update()</code>.
+ 	 * 
+-	 * @param filename File name
+-	 * @exception IOException If I/O error occurs
+-	 * @exception NoMP3FrameException If file does not contain at least one mp3
+-	 *                frame
+-	 * @exception ID3v2WrongCRCException If the ID3v2 tag fails CRC
+-	 * @exception ID3v2DecompressionException If the ID3v2 tag cannot be
+-	 *                decompressed
+-	 * @exception ID3v2IllegalVersionException If the ID3v2 tag has a wrong (too
+-	 *                high) version
++	 * @param filename
++	 *            File name
++	 * @exception IOException
++	 *                If I/O error occurs
++	 * @exception NoMP3FrameException
++	 *                If file does not contain at least one mp3 frame
++	 * @exception ID3v2WrongCRCException
++	 *                If the ID3v2 tag fails CRC
++	 * @exception ID3v2DecompressionException
++	 *                If the ID3v2 tag cannot be decompressed
++	 * @exception ID3v2IllegalVersionException
++	 *                If the ID3v2 tag has a wrong (too high) version
+ 	 */
+ 	public MP3File(String filename) throws IOException, NoMP3FrameException,
+ 			ID3v2WrongCRCException, ID3v2DecompressionException,
+@@ -79,16 +82,20 @@
+ 	 * name in the specified directory. Tag information is completely read the
+ 	 * first time it is requested and written after <code>update()</code>.
+ 	 * 
+-	 * @param dir Directory
+-	 * @param filename File name
+-	 * @exception IOException If I/O error occurs
+-	 * @exception NoMP3FrameException If file does not contain at least one mp3
+-	 *                frame
+-	 * @exception ID3v2WrongCRCException If the ID3v2 tag fails CRC
+-	 * @exception ID3v2DecompressionException If the ID3v2 tag cannot be
+-	 *                decompressed
+-	 * @exception ID3v2IllegalVersionException If the ID3v2 tag has a wrong (too
+-	 *                high) version
++	 * @param dir
++	 *            Directory
++	 * @param filename
++	 *            File name
++	 * @exception IOException
++	 *                If I/O error occurs
++	 * @exception NoMP3FrameException
++	 *                If file does not contain at least one mp3 frame
++	 * @exception ID3v2WrongCRCException
++	 *                If the ID3v2 tag fails CRC
++	 * @exception ID3v2DecompressionException
++	 *                If the ID3v2 tag cannot be decompressed
++	 * @exception ID3v2IllegalVersionException
++	 *                If the ID3v2 tag has a wrong (too high) version
+ 	 */
+ 	public MP3File(File dir, String filename) throws IOException,
+ 			NoMP3FrameException, ID3v2WrongCRCException,
+@@ -103,16 +110,20 @@
+ 	 * argument. Tag information is completely read the first time it is
+ 	 * requested and written after <code>update()</code>.
+ 	 * 
+-	 * @param dir Name of directory
+-	 * @param filename File name
+-	 * @exception IOException If I/O error occurs
+-	 * @exception NoMP3FrameException If file does not contain at least one mp3
+-	 *                frame
+-	 * @exception ID3v2WrongCRCException If the ID3v2 tag fails CRC
+-	 * @exception ID3v2DecompressionException If the ID3v2 tag cannot be
+-	 *                decompressed
+-	 * @exception ID3v2IllegalVersionException If the ID3v2 tag has a wrong (too
+-	 *                high) version
++	 * @param dir
++	 *            Name of directory
++	 * @param filename
++	 *            File name
++	 * @exception IOException
++	 *                If I/O error occurs
++	 * @exception NoMP3FrameException
++	 *                If file does not contain at least one mp3 frame
++	 * @exception ID3v2WrongCRCException
++	 *                If the ID3v2 tag fails CRC
++	 * @exception ID3v2DecompressionException
++	 *                If the ID3v2 tag cannot be decompressed
++	 * @exception ID3v2IllegalVersionException
++	 *                If the ID3v2 tag has a wrong (too high) version
+ 	 */
+ 	public MP3File(String dir, String filename) throws IOException,
+ 			NoMP3FrameException, ID3v2WrongCRCException,
+@@ -124,8 +135,10 @@
+ 	/**
+ 	 * Commit information to file
+ 	 * 
+-	 * @exception ID3Exception If an error occurs when writing the ID3 tag
+-	 * @exception ID3v2Exception If an error ocurrs when writing the ID3v2 tag
++	 * @exception ID3Exception
++	 *                If an error occurs when writing the ID3 tag
++	 * @exception ID3v2Exception
++	 *                If an error ocurrs when writing the ID3v2 tag
+ 	 */
+ 	public void update() throws ID3Exception, ID3v2Exception {
+ 		// write id3v1
+@@ -152,7 +165,8 @@
+ 	/**
+ 	 * Write ID3 tag?
+ 	 * 
+-	 * @param write_id3 True: Write ID3 tag on update
++	 * @param write_id3
++	 *            True: Write ID3 tag on update
+ 	 */
+ 	public void setWriteID3(boolean write_id3) {
+ 		this.write_id3 = write_id3;
+@@ -170,7 +184,8 @@
+ 	/**
+ 	 * Write ID3v2 tag?
+ 	 * 
+-	 * @param write_id3v2 True: Write ID3v2 tag on update
++	 * @param write_id3v2
++	 *            True: Write ID3v2 tag on update
+ 	 */
+ 	public void setWriteID3v2(boolean write_id3v2) {
+ 		this.write_id3v2 = write_id3v2;
+@@ -189,7 +204,8 @@
+ 	 * Use compression in ID3v2 tag? Frames are compressed only when the
+ 	 * compressed content is smaller than the uncompressed content.
+ 	 * 
+-	 * @param use_compression True: Use compression
++	 * @param use_compression
++	 *            True: Use compression
+ 	 */
+ 	public void setUseCompression(boolean use_compression) {
+ 		this.use_compression = use_compression;
+@@ -205,7 +221,8 @@
+ 	/**
+ 	 * Use CRC in ID3v2 tag?
+ 	 * 
+-	 * @param use_crc True: Use CRC
++	 * @param use_crc
++	 *            True: Use CRC
+ 	 */
+ 	public void setUseCRC(boolean use_crc) {
+ 		this.use_crc = use_crc;
+@@ -226,7 +243,8 @@
+ 	/**
+ 	 * Use padding in ID3v2 tag?
+ 	 * 
+-	 * @param use_padding True: Use padding
++	 * @param use_padding
++	 *            True: Use padding
+ 	 */
+ 	public void setUsePadding(boolean use_padding) {
+ 		this.use_padding = use_padding;
+@@ -247,7 +265,8 @@
+ 	/**
+ 	 * Use unsynchronization in ID3v2 tag?
+ 	 * 
+-	 * @param use_unsynch True: Use unsynchronization
++	 * @param use_unsynch
++	 *            True: Use unsynchronization
+ 	 */
+ 	public void setUseUnsynchronization(boolean use_unsynch) {
+ 		this.use_unsynchronization = use_unsynch;
+@@ -363,7 +382,8 @@
+ 	 * Read album/movie/show title. Album is stored as text content.
+ 	 * 
+ 	 * @return Album
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getAlbum() throws FrameDamagedException {
+ 		TagContent ret = TextFrameEncoding.read(id3v2, "TALB");
+@@ -381,9 +401,10 @@
+ 	/**
+ 	 * Set album. Album is read from text content.
+ 	 * 
+-	 * @param album Album to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param album
++	 *            Album to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setAlbum(TagContent album) throws TagFormatException {
+ 		if (album.getTextContent() == null) {
+@@ -401,7 +422,8 @@
+ 	 * Read BPM. BPM is stored as text content.
+ 	 * 
+ 	 * @return BPM
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getBPM() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TBPM");
+@@ -410,9 +432,10 @@
+ 	/**
+ 	 * Set BPM. BPM is read from text content.
+ 	 * 
+-	 * @param bpm BPM to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param bpm
++	 *            BPM to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setBPM(TagContent bpm) throws TagFormatException {
+ 		if (bpm.getTextContent() == null
+@@ -427,7 +450,8 @@
+ 	 * Read composer(s), stored as text content.
+ 	 * 
+ 	 * @return composer(s)
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getComposer() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TCOM");
+@@ -436,9 +460,10 @@
+ 	/**
+ 	 * Set composer(s), read from text content.
+ 	 * 
+-	 * @param composer Composer(s) to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param composer
++	 *            Composer(s) to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setComposer(TagContent composer) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TCOM", composer, use_compression))
+@@ -451,7 +476,8 @@
+ 	 * number (like (4)), round brackets in text are escaped by ((.
+ 	 * 
+ 	 * @return Album
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getGenre() throws FrameDamagedException {
+ 		TagContent ret = new TagContent();
+@@ -494,9 +520,10 @@
+ 	 * round brackets around the number (like (4)), round brackets in text are
+ 	 * escaped by ((.
+ 	 * 
+-	 * @param genre Genre to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param genre
++	 *            Genre to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setGenre(TagContent genre) throws TagFormatException {
+ 		if (genre.getTextContent() == null) {
+@@ -534,6 +561,16 @@
+ 						} catch (NumberFormatException e) {
+ 						}
+ 					}
++				} else {
++					// wrong. e.g. "(-96)"
++					// throw new TagFormatException();
++
++					// set as 12. Other. Refer to http://www.id3.org/id3v2-00
++					try {
++						id3.setGenre(12);
++					} catch (ID3IllegalFormatException e2) {
++					}
++					found = true;
+ 				}
+ 			}
+ 		}
+@@ -573,7 +610,8 @@
+ 	 * where (C) is one character showing a C in a circle...
+ 	 * 
+ 	 * @return Copyright
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getCopyrightText() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TCOP");
+@@ -582,9 +620,10 @@
+ 	/**
+ 	 * Set copyright, read from text content.
+ 	 * 
+-	 * @param copyright Copyright to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param copyright
++	 *            Copyright to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setCopyrightText(TagContent copyright)
+ 			throws TagFormatException {
+@@ -596,7 +635,8 @@
+ 	 * Read date (format DDMM), store as text content.
+ 	 * 
+ 	 * @return date
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getDate() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TDAT");
+@@ -605,9 +645,10 @@
+ 	/**
+ 	 * Set date (format DDMM), read from text content.
+ 	 * 
+-	 * @param date Date to set
+-	 * @exception TagFormatException If input does not adhere to the format
+-	 *                given above.
++	 * @param date
++	 *            Date to set
++	 * @exception TagFormatException
++	 *                If input does not adhere to the format given above.
+ 	 */
+ 	public void setDate(TagContent date) throws TagFormatException {
+ 		// check format
+@@ -624,7 +665,8 @@
+ 	 * Read playlist delay, store as text content.
+ 	 * 
+ 	 * @return Playlist delay
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getPlaylistDelay() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TDLY");
+@@ -633,8 +675,10 @@
+ 	/**
+ 	 * Set playlist delay, read from text content.
+ 	 * 
+-	 * @param delay Playlist delay to set
+-	 * @exception TagFormatException If input is not a numeric string
++	 * @param delay
++	 *            Playlist delay to set
++	 * @exception TagFormatException
++	 *                If input is not a numeric string
+ 	 */
+ 	public void setPlaylistDelay(TagContent delay) throws TagFormatException {
+ 		// check format
+@@ -650,7 +694,8 @@
+ 	 * Read encoded by, store as text content.
+ 	 * 
+ 	 * @return Encoded by
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getEncodedBy() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TENC");
+@@ -659,9 +704,10 @@
+ 	/**
+ 	 * Set encoded by, read from text content.
+ 	 * 
+-	 * @param encoder Encoded by to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param encoder
++	 *            Encoded by to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setEncodedBy(TagContent encoder) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TENC", encoder, use_compression))
+@@ -672,7 +718,8 @@
+ 	 * Read lyricist, store as text content.
+ 	 * 
+ 	 * @return Lyricist
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getLyricist() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TEXT");
+@@ -681,9 +728,10 @@
+ 	/**
+ 	 * Set lyricist, read from text content.
+ 	 * 
+-	 * @param lyricist Lyricist to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param lyricist
++	 *            Lyricist to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setLyricist(TagContent lyricist) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TEXT", lyricist, use_compression))
+@@ -708,7 +756,8 @@
+ 	 * <p>
+ 	 * 
+ 	 * @return File type
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getFileType() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TFLT");
+@@ -717,9 +766,10 @@
+ 	/**
+ 	 * Set file type, read from text content.
+ 	 * 
+-	 * @param type File type to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param type
++	 *            File type to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setFileType(TagContent type) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TFLT", type, use_compression)).write();
+@@ -729,7 +779,8 @@
+ 	 * Read time (format HHMM), store as text content.
+ 	 * 
+ 	 * @return Time
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getTime() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TIME");
+@@ -738,9 +789,10 @@
+ 	/**
+ 	 * Set time (format HHMM), read from text content.
+ 	 * 
+-	 * @param time Time to set
+-	 * @exception TagFormatException If input does not adhere to the format
+-	 *                given above.
++	 * @param time
++	 *            Time to set
++	 * @exception TagFormatException
++	 *                If input does not adhere to the format given above.
+ 	 */
+ 	public void setTime(TagContent time) throws TagFormatException {
+ 		// check format
+@@ -760,7 +812,8 @@
+ 	 * of sounds, e.g. "Piano Concerto", "Weather - Hurricane")
+ 	 * 
+ 	 * @return Content group
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getContentGroup() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TIT1");
+@@ -772,9 +825,10 @@
+ 	 * Content group description is used if sound belongs to a larger category
+ 	 * of sounds, e.g. "Piano Concerto", "Weather - Hurricane")
+ 	 * 
+-	 * @param content Content group description to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param content
++	 *            Content group description to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setContentGroup(TagContent content) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TIT1", content, use_compression))
+@@ -785,7 +839,8 @@
+ 	 * Read song title, store as text content.
+ 	 * 
+ 	 * @return Song title
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getTitle() throws FrameDamagedException {
+ 		TagContent ret = TextFrameEncoding.read(id3v2, "TIT2");
+@@ -803,9 +858,10 @@
+ 	/**
+ 	 * Set title, read from text content.
+ 	 * 
+-	 * @param title Title to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param title
++	 *            Title to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setTitle(TagContent title) throws TagFormatException {
+ 		if (title.getTextContent() == null) {
+@@ -825,7 +881,8 @@
+ 	 * (e.g. "Op. 16" or "Performed live at Wembley")
+ 	 * 
+ 	 * @return Subtitle
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getSubtitle() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TIT3");
+@@ -837,9 +894,10 @@
+ 	 * Content group description is used if sound belongs to a larger category
+ 	 * of sounds, e.g. "Piano Concerto", "Weather - Hurricane")
+ 	 * 
+-	 * @param subtitle Subtitle to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param subtitle
++	 *            Subtitle to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setSubtitle(TagContent subtitle) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TIT3", subtitle, use_compression))
+@@ -853,7 +911,8 @@
+ 	 * keys: A, B, C, D, E, F, G, halfkeys b and #. Minor: m, Off key: o
+ 	 * 
+ 	 * @return Initial key
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getInitialKey() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TKEY");
+@@ -865,8 +924,10 @@
+ 	 * Musical key in which sound starts. String with max 3 characters, ground
+ 	 * keys: A, B, C, D, E, F, G, halfkeys b and #. Minor: m, Off key: o
+ 	 * 
+-	 * @param key Initial key to set
+-	 * @exception TagFormatException If key is longer than three characters
++	 * @param key
++	 *            Initial key to set
++	 * @exception TagFormatException
++	 *                If key is longer than three characters
+ 	 */
+ 	public void setInitialKey(TagContent key) throws TagFormatException {
+ 		if (key.getTextContent() == null
+@@ -883,7 +944,8 @@
+ 	 * Language is represented with three characters according to ISO-639-2.
+ 	 * 
+ 	 * @return Language
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getLanguage() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TLAN");
+@@ -894,9 +956,10 @@
+ 	 * <p>
+ 	 * Language is represented with three characters according to ISO-639-2.
+ 	 * 
+-	 * @param lang Language to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param lang
++	 *            Language to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setLanguage(TagContent lang) throws TagFormatException {
+ 		if (lang.getTextContent() == null
+@@ -914,7 +977,8 @@
+ 	 * calculated from file length.
+ 	 * 
+ 	 * @return Length
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getLengthInTag() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TLEN");
+@@ -923,8 +987,10 @@
+ 	/**
+ 	 * Set length of audiofile in milliseconds, read from text content.
+ 	 * 
+-	 * @param length Length to set
+-	 * @exception TagFormatException If input is not a numeric string
++	 * @param length
++	 *            Length to set
++	 * @exception TagFormatException
++	 *                If input is not a numeric string
+ 	 */
+ 	public void setLengthInTag(TagContent length) throws TagFormatException {
+ 		// check format
+@@ -942,7 +1008,8 @@
+ 	 * See the ID3v2 informal standard for more information.
+ 	 * 
+ 	 * @return Media type
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getMediaType() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TMED");
+@@ -953,9 +1020,10 @@
+ 	 * <p>
+ 	 * See the ID3v2 informal standard for more information.
+ 	 * 
+-	 * @param type Media type to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param type
++	 *            Media type to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setMediaType(TagContent type) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TMED", type, use_compression)).write();
+@@ -965,7 +1033,8 @@
+ 	 * Read original title (for cover songs), store as text content
+ 	 * 
+ 	 * @return Original title
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getOriginalTitle() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TOAL");
+@@ -974,9 +1043,10 @@
+ 	/**
+ 	 * Set original title, read from text content.
+ 	 * 
+-	 * @param title Original title to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param title
++	 *            Original title to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setOriginalTitle(TagContent title) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TOAL", title, use_compression)).write();
+@@ -989,7 +1059,8 @@
+ 	 * have limitations to the filename. It is stored including suffix.
+ 	 * 
+ 	 * @return Original filename
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getOriginalFilename() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TOFN");
+@@ -1001,9 +1072,10 @@
+ 	 * Original filename is used to store prefered filename on media which have
+ 	 * limitations to the filename. It is stored including suffix.
+ 	 * 
+-	 * @param filename Original filename to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param filename
++	 *            Original filename to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setOriginalFilename(TagContent filename)
+ 			throws TagFormatException {
+@@ -1015,7 +1087,8 @@
+ 	 * Read original lyricist(s) (for cover songs), store as text content
+ 	 * 
+ 	 * @return Original lyricist(s)
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getOriginalLyricist() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TOLY");
+@@ -1024,9 +1097,10 @@
+ 	/**
+ 	 * Set original lyricist(s), read from text content.
+ 	 * 
+-	 * @param lyricist Original lyricist(s) to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param lyricist
++	 *            Original lyricist(s) to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setOriginalLyricist(TagContent lyricist)
+ 			throws TagFormatException {
+@@ -1038,7 +1112,8 @@
+ 	 * Read original artist(s) (for cover songs), store as text content
+ 	 * 
+ 	 * @return Original artist(s)
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getOriginalArtist() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TOPE");
+@@ -1047,9 +1122,10 @@
+ 	/**
+ 	 * Set original artist(s), read from text content.
+ 	 * 
+-	 * @param artist Original artist(s) to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param artist
++	 *            Original artist(s) to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setOriginalArtist(TagContent artist) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TOPE", artist, use_compression)).write();
+@@ -1060,7 +1136,8 @@
+ 	 * content
+ 	 * 
+ 	 * @return Original release year
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getOriginalYear() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TORY");
+@@ -1069,8 +1146,10 @@
+ 	/**
+ 	 * Set original release year (format YYYY), read from text content.
+ 	 * 
+-	 * @param year Original year to set
+-	 * @exception TagFormatException If input is not in the format listed above
++	 * @param year
++	 *            Original year to set
++	 * @exception TagFormatException
++	 *                If input is not in the format listed above
+ 	 */
+ 	public void setOriginalYear(TagContent year) throws TagFormatException {
+ 		// check format
+@@ -1087,7 +1166,8 @@
+ 	 * Read file owner, store as text content
+ 	 * 
+ 	 * @return File owner
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getFileOwner() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TOWN");
+@@ -1096,9 +1176,10 @@
+ 	/**
+ 	 * Set file owner, read from text content.
+ 	 * 
+-	 * @param owner File owner to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param owner
++	 *            File owner to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setFileOwner(TagContent owner) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TOWN", owner, use_compression)).write();
+@@ -1108,7 +1189,8 @@
+ 	 * Read artist, store as text content.
+ 	 * 
+ 	 * @return Artist
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getArtist() throws FrameDamagedException {
+ 		TagContent ret = TextFrameEncoding.read(id3v2, "TPE1");
+@@ -1125,9 +1207,10 @@
+ 	/**
+ 	 * Set artist, read from text content.
+ 	 * 
+-	 * @param artist Artist to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param artist
++	 *            Artist to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setArtist(TagContent artist) throws TagFormatException {
+ 		// write v1
+@@ -1140,7 +1223,8 @@
+ 	 * Read band (orchestra, accompaniment), store as text content
+ 	 * 
+ 	 * @return Band
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getBand() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TPE2");
+@@ -1149,9 +1233,10 @@
+ 	/**
+ 	 * Set band, read from text content.
+ 	 * 
+-	 * @param band Band to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param band
++	 *            Band to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setBand(TagContent band) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TPE2", band, use_compression)).write();
+@@ -1161,7 +1246,8 @@
+ 	 * Read conductor, store as text content
+ 	 * 
+ 	 * @return Conductor
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getConductor() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TPE3");
+@@ -1170,9 +1256,10 @@
+ 	/**
+ 	 * Set conductor, read from text content.
+ 	 * 
+-	 * @param conductor Conductor to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param conductor
++	 *            Conductor to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setConductor(TagContent conductor) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TPE3", conductor, use_compression))
+@@ -1183,7 +1270,8 @@
+ 	 * Read remixer, store as text content
+ 	 * 
+ 	 * @return Remixer
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getRemixer() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TPE4");
+@@ -1192,9 +1280,10 @@
+ 	/**
+ 	 * Set remixer, read from text content.
+ 	 * 
+-	 * @param remixer Remixer to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param remixer
++	 *            Remixer to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setRemixer(TagContent remixer) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TPE4", remixer, use_compression))
+@@ -1205,7 +1294,8 @@
+ 	 * Read part of a set (e.g. 1/2 for a double CD), store as text content
+ 	 * 
+ 	 * @return Part of a set
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getPartOfSet() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TPOS");
+@@ -1214,9 +1304,10 @@
+ 	/**
+ 	 * Set part of a set (e.g. 1/2 for a double CD), read from text content.
+ 	 * 
+-	 * @param part Part of a set to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param part
++	 *            Part of a set to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setPartOfSet(TagContent part) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TPOS", part, use_compression)).write();
+@@ -1226,7 +1317,8 @@
+ 	 * Read publisher, store as text content
+ 	 * 
+ 	 * @return Publisher
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getPublisher() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TPUB");
+@@ -1235,9 +1327,10 @@
+ 	/**
+ 	 * Set publisher, read from text content.
+ 	 * 
+-	 * @param publisher Publisher to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param publisher
++	 *            Publisher to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setPublisher(TagContent publisher) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TPUB", publisher, use_compression))
+@@ -1248,7 +1341,8 @@
+ 	 * Read track number, store in text content.
+ 	 * 
+ 	 * @return Track number
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getTrack() throws FrameDamagedException {
+ 		TagContent ret = new TagContent();
+@@ -1288,9 +1382,10 @@
+ 	/**
+ 	 * Set track number, read from text content.
+ 	 * 
+-	 * @param track Track number to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param track
++	 *            Track number to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setTrack(TagContent track) throws TagFormatException {
+ 		if (track.getTextContent() == null) {
+@@ -1343,7 +1438,8 @@
+ 	 * Get recording dates, store as text content
+ 	 * 
+ 	 * @return Recording dates
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getRecordingDates() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TRDA");
+@@ -1352,9 +1448,10 @@
+ 	/**
+ 	 * Set recording date, read from text content.
+ 	 * 
+-	 * @param date Recording date
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param date
++	 *            Recording date
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setRecordingDate(TagContent date) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TRDA", date, use_compression)).write();
+@@ -1364,7 +1461,8 @@
+ 	 * Get Internet radio station name, store as text content
+ 	 * 
+ 	 * @return Internet radio station name
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getInternetRadioStationName()
+ 			throws FrameDamagedException {
+@@ -1374,9 +1472,10 @@
+ 	/**
+ 	 * Set Internet radio station name, read from text content.
+ 	 * 
+-	 * @param name Internet radio station name
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param name
++	 *            Internet radio station name
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setInternetRadioStationName(TagContent name)
+ 			throws TagFormatException {
+@@ -1387,7 +1486,8 @@
+ 	 * Get Internet radio station owner, store as text content
+ 	 * 
+ 	 * @return Internet radio station owner
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getInternetRadioStationOwner()
+ 			throws FrameDamagedException {
+@@ -1397,9 +1497,10 @@
+ 	/**
+ 	 * Set Internet radio station owner, read from text content.
+ 	 * 
+-	 * @param owner Station owner
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param owner
++	 *            Station owner
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setInternetRadioStationOwner(TagContent owner)
+ 			throws TagFormatException {
+@@ -1410,7 +1511,8 @@
+ 	 * Get size of file in bytes, excluding id3v2 tag, store as text content
+ 	 * 
+ 	 * @return Size of File
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getFilesize() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TSIZ");
+@@ -1419,8 +1521,10 @@
+ 	/**
+ 	 * Set size of files in bytes, excluding id3v2 tag, read from text content.
+ 	 * 
+-	 * @param size Size of file
+-	 * @exception TagFormatException If input is not numeric
++	 * @param size
++	 *            Size of file
++	 * @exception TagFormatException
++	 *                If input is not numeric
+ 	 */
+ 	public void setFilesize(TagContent size) throws TagFormatException {
+ 		if (size.getTextContent() == null
+@@ -1435,7 +1539,8 @@
+ 	 * Get International Standard Recording Code, store as text content
+ 	 * 
+ 	 * @return ISRC
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getISRC() throws FrameDamagedException {
+ 		return TextFrameEncoding.read(id3v2, "TSRC");
+@@ -1444,8 +1549,10 @@
+ 	/**
+ 	 * Set International Standard Recording Code, read from text content.
+ 	 * 
+-	 * @param isrc ISRC
+-	 * @exception TagFormatException If input is not of 12 character's length
++	 * @param isrc
++	 *            ISRC
++	 * @exception TagFormatException
++	 *                If input is not of 12 character's length
+ 	 */
+ 	public void setISRC(TagContent isrc) throws TagFormatException {
+ 		(new TextFrameEncoding(id3v2, "TSRC", isrc, use_compression)).write();
+@@ -1455,7 +1562,8 @@
+ 	 * Get year of recording, store as text content
+ 	 * 
+ 	 * @return Recording dates
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getYear() throws FrameDamagedException {
+ 		TagContent ret = TextFrameEncoding.read(id3v2, "TYER");
+@@ -1473,9 +1581,10 @@
+ 	/**
+ 	 * Set year of recording, read from text content.
+ 	 * 
+-	 * @param year Year of recording
+-	 * @exception TagFormatException If input is not numeric or not 4 or 5
+-	 *                characters
++	 * @param year
++	 *            Year of recording
++	 * @exception TagFormatException
++	 *                If input is not numeric or not 4 or 5 characters
+ 	 */
+ 	public void setYear(TagContent year) throws TagFormatException {
+ 		if (year.getTextContent() == null
+@@ -1496,7 +1605,8 @@
+ 	 * Read Commercial information webpage, store as text content
+ 	 * 
+ 	 * @return Commercial information
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getCommercialInformation() throws FrameDamagedException {
+ 		return TextFrameNoEncoding.read(id3v2, "WCOM");
+@@ -1505,9 +1615,10 @@
+ 	/**
+ 	 * Set Commercial information webpage, read from text content.
+ 	 * 
+-	 * @param info Commercial information to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param info
++	 *            Commercial information to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setCommercialInformation(TagContent info)
+ 			throws TagFormatException {
+@@ -1518,7 +1629,8 @@
+ 	 * Read Coypright / legal information webpage, store as text content
+ 	 * 
+ 	 * @return Copyright webpage
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getCopyrightWebpage() throws FrameDamagedException {
+ 		return TextFrameNoEncoding.read(id3v2, "WCOP");
+@@ -1527,9 +1639,10 @@
+ 	/**
+ 	 * Set Copyright / legal information webpage, read from text content.
+ 	 * 
+-	 * @param copy Copyright webpage to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param copy
++	 *            Copyright webpage to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setCopyrightWebpage(TagContent copy) throws TagFormatException {
+ 		(new TextFrameNoEncoding(id3v2, "WCOP", copy, use_compression)).write();
+@@ -1539,7 +1652,8 @@
+ 	 * Read official audio file webpage, store as text content
+ 	 * 
+ 	 * @return Audio file webpage
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getAudioFileWebpage() throws FrameDamagedException {
+ 		return TextFrameNoEncoding.read(id3v2, "WOAF");
+@@ -1548,9 +1662,10 @@
+ 	/**
+ 	 * Set official audio file webpage, read from text content.
+ 	 * 
+-	 * @param page Official audio file webpage to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param page
++	 *            Official audio file webpage to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setAudioFileWebpage(TagContent page) throws TagFormatException {
+ 		(new TextFrameNoEncoding(id3v2, "WOAF", page, use_compression)).write();
+@@ -1560,7 +1675,8 @@
+ 	 * Read official artist / performer webpage, store as text content
+ 	 * 
+ 	 * @return Artist webpage
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getArtistWebpage() throws FrameDamagedException {
+ 		return TextFrameNoEncoding.read(id3v2, "WOAR");
+@@ -1569,9 +1685,10 @@
+ 	/**
+ 	 * Set official artist / performer webpage, read from text content.
+ 	 * 
+-	 * @param page Artist webpage webpage to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param page
++	 *            Artist webpage webpage to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setArtistWebpage(TagContent page) throws TagFormatException {
+ 		(new TextFrameNoEncoding(id3v2, "WOAR", page, use_compression)).write();
+@@ -1582,7 +1699,8 @@
+ 	 * movie soundtracks, then points to the movie
+ 	 * 
+ 	 * @return Audio source webpage
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getAudioSourceWebpage() throws FrameDamagedException {
+ 		return TextFrameNoEncoding.read(id3v2, "WOAS");
+@@ -1591,9 +1709,10 @@
+ 	/**
+ 	 * Set official audio source webpage, read from text content.
+ 	 * 
+-	 * @param page Official audio source webpage to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param page
++	 *            Official audio source webpage to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setAudioSourceWebpage(TagContent page)
+ 			throws TagFormatException {
+@@ -1604,7 +1723,8 @@
+ 	 * Read official internet radio station webpage, store as text content
+ 	 * 
+ 	 * @return Internet radio station webpage
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getInternetRadioStationWebpage()
+ 			throws FrameDamagedException {
+@@ -1614,9 +1734,10 @@
+ 	/**
+ 	 * Set official internet radio station webpage, read from text content.
+ 	 * 
+-	 * @param page Official internet radio station webpage to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param page
++	 *            Official internet radio station webpage to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setInternetRadioStationWebpage(TagContent page)
+ 			throws TagFormatException {
+@@ -1627,7 +1748,8 @@
+ 	 * Read payment webpage, store as text content
+ 	 * 
+ 	 * @return Payment webpage
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getPaymentWebpage() throws FrameDamagedException {
+ 		return TextFrameNoEncoding.read(id3v2, "WPAY");
+@@ -1636,9 +1758,10 @@
+ 	/**
+ 	 * Set payment webpage, read from text content.
+ 	 * 
+-	 * @param page Payment webpage to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param page
++	 *            Payment webpage to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setPaymentWebpage(TagContent page) throws TagFormatException {
+ 		(new TextFrameNoEncoding(id3v2, "WPAY", page, use_compression)).write();
+@@ -1648,7 +1771,8 @@
+ 	 * Read official publishers webpage, store as text content
+ 	 * 
+ 	 * @return Publishers webpage
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getPublishersWebpage() throws FrameDamagedException {
+ 		return TextFrameNoEncoding.read(id3v2, "WPUB");
+@@ -1657,9 +1781,10 @@
+ 	/**
+ 	 * Set official publishers webpage, read from text content.
+ 	 * 
+-	 * @param page Official publishers webpage to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param page
++	 *            Official publishers webpage to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setPublishersWebpage(TagContent page) throws TagFormatException {
+ 		(new TextFrameNoEncoding(id3v2, "WPUB", page, use_compression)).write();
+@@ -1672,7 +1797,8 @@
+ 	 * standard for details on the format of this field.
+ 	 * 
+ 	 * @return Event timing codes
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getEventTimingCodes() throws FrameDamagedException {
+ 		return BinaryFrame.read(id3v2, "ETCO");
+@@ -1681,9 +1807,10 @@
+ 	/**
+ 	 * Set event timing codes, read from binary content.
+ 	 * 
+-	 * @param codes Timing codes to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param codes
++	 *            Timing codes to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setEventTimingCodes(TagContent codes) throws TagFormatException {
+ 		(new BinaryFrame(id3v2, "ETCO", codes, use_compression)).write();
+@@ -1694,7 +1821,8 @@
+ 	 * informal standard for details on the format of this field.
+ 	 * 
+ 	 * @return Lookup table
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getLookupTable() throws FrameDamagedException {
+ 		return BinaryFrame.read(id3v2, "MLLT");
+@@ -1704,9 +1832,10 @@
+ 	 * Set MPEG location lookup table, read from binary content. See the ID3v2
+ 	 * informal standard for details on the format of this field.
+ 	 * 
+-	 * @param table Location lookup table to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param table
++	 *            Location lookup table to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setLookupTable(TagContent table) throws TagFormatException {
+ 		(new BinaryFrame(id3v2, "MLLT", table, use_compression)).write();
+@@ -1717,7 +1846,8 @@
+ 	 * informal standard for details on the format of this field.
+ 	 * 
+ 	 * @return Synchronized tempo codes
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getSynchronizedTempoCodes() throws FrameDamagedException {
+ 		return BinaryFrame.read(id3v2, "SYTC");
+@@ -1727,9 +1857,10 @@
+ 	 * Set synchronized tempo codes, read from binary content. See the ID3v2
+ 	 * informal standard for details on the format of this field.
+ 	 * 
+-	 * @param codes Synchronized tempo codes to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param codes
++	 *            Synchronized tempo codes to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setSynchronizedTempoCodes(TagContent codes)
+ 			throws TagFormatException {
+@@ -1741,7 +1872,8 @@
+ 	 * standard for details on the format of this field.
+ 	 * 
+ 	 * @return Synchronized lyrics
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getSynchronizedLyrics() throws FrameDamagedException {
+ 		return BinaryFrame.read(id3v2, "SYLT");
+@@ -1751,9 +1883,10 @@
+ 	 * Set synchronized lyrics, read from binary content. See the ID3v2 informal
+ 	 * standard for details on the format of this field.
+ 	 * 
+-	 * @param lyrics Synchronized lyrics
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param lyrics
++	 *            Synchronized lyrics
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setSynchronizedLyrics(TagContent lyrics)
+ 			throws TagFormatException {
+@@ -1765,7 +1898,8 @@
+ 	 * informal standard for details on the format of this field.
+ 	 * 
+ 	 * @return Relative volume adjustment
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getRelativeVolumenAdjustment()
+ 			throws FrameDamagedException {
+@@ -1776,9 +1910,10 @@
+ 	 * Set relative volume adjustment, read from binary content. See the ID3v2
+ 	 * informal standard for details on the format of this field.
+ 	 * 
+-	 * @param adjust Relative volume adjustment to set
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param adjust
++	 *            Relative volume adjustment to set
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setRelativeVolumeAdjustment(TagContent adjust)
+ 			throws TagFormatException {
+@@ -1790,7 +1925,8 @@
+ 	 * standard for details on the format of this field.
+ 	 * 
+ 	 * @return Equalisation
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getEqualisation() throws FrameDamagedException {
+ 		return BinaryFrame.read(id3v2, "EQUA");
+@@ -1800,9 +1936,10 @@
+ 	 * Set equalisation, read from binary content. See the ID3v2 informal
+ 	 * standard for details on the format of this field.
+ 	 * 
+-	 * @param equal Equalisation
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param equal
++	 *            Equalisation
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setEqualisation(TagContent equal) throws TagFormatException {
+ 		(new BinaryFrame(id3v2, "EQUA", equal, use_compression)).write();
+@@ -1813,7 +1950,8 @@
+ 	 * details on the format of this field.
+ 	 * 
+ 	 * @return Reverb
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getReverb() throws FrameDamagedException {
+ 		return BinaryFrame.read(id3v2, "RVRB");
+@@ -1823,9 +1961,10 @@
+ 	 * Set reverb, read from binary content. See the ID3v2 informal standard for
+ 	 * details on the format of this field.
+ 	 * 
+-	 * @param reverb Reverb
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param reverb
++	 *            Reverb
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setReverb(TagContent reverb) throws TagFormatException {
+ 		(new BinaryFrame(id3v2, "RVRB", reverb, use_compression)).write();
+@@ -1836,7 +1975,8 @@
+ 	 * standard for details on the format of this field.
+ 	 * 
+ 	 * @return Play counter
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getPlayCounter() throws FrameDamagedException {
+ 		return BinaryFrame.read(id3v2, "PCNT");
+@@ -1846,9 +1986,10 @@
+ 	 * Set play counter, read from binary content. See the ID3v2 informal
+ 	 * standard for details on the format of this field.
+ 	 * 
+-	 * @param count Play counter
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param count
++	 *            Play counter
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setPlayCounter(TagContent count) throws TagFormatException {
+ 		(new BinaryFrame(id3v2, "PCNT", count, use_compression)).write();
+@@ -1859,7 +2000,8 @@
+ 	 * standard for details on the format of this field.
+ 	 * 
+ 	 * @return Popularimeter
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getPopularimeter() throws FrameDamagedException {
+ 		return BinaryFrame.read(id3v2, "POPM");
+@@ -1869,9 +2011,10 @@
+ 	 * Set popularimeter, read from binary content. See the ID3v2 informal
+ 	 * standard for details on the format of this field.
+ 	 * 
+-	 * @param pop Popularimeter
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param pop
++	 *            Popularimeter
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setPopularimeter(TagContent pop) throws TagFormatException {
+ 		(new BinaryFrame(id3v2, "POPM", pop, use_compression)).write();
+@@ -1882,7 +2025,8 @@
+ 	 * informal standard for details on the format of this field.
+ 	 * 
+ 	 * @return Recommended buffer size
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getRecommendedBufferSize() throws FrameDamagedException {
+ 		return BinaryFrame.read(id3v2, "RBUF");
+@@ -1892,9 +2036,10 @@
+ 	 * Set recommended buffer size, read from binary content. See the ID3v2
+ 	 * informal standard for details on the format of this field.
+ 	 * 
+-	 * @param size Recommended buffer size
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param size
++	 *            Recommended buffer size
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setRecommendedBufferSize(TagContent size)
+ 			throws TagFormatException {
+@@ -1906,7 +2051,8 @@
+ 	 * informal standard for details on the format of this field.
+ 	 * 
+ 	 * @return Position synchronization
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getPositionSynchronization() throws FrameDamagedException {
+ 		return BinaryFrame.read(id3v2, "POSS");
+@@ -1916,9 +2062,10 @@
+ 	 * Set position synchronization, read from binary content. See the ID3v2
+ 	 * informal standard for details on the format of this field.
+ 	 * 
+-	 * @param synch Position synchronization
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param synch
++	 *            Position synchronization
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setPositionSynchronization(TagContent synch)
+ 			throws TagFormatException {
+@@ -1930,7 +2077,8 @@
+ 	 * for details on the format of this field.
+ 	 * 
+ 	 * @return Ownership
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getOwnership() throws FrameDamagedException {
+ 		return BinaryFrame.read(id3v2, "OWNE");
+@@ -1940,9 +2088,10 @@
+ 	 * Set ownership, read from binary content. See the ID3v2 informal standard
+ 	 * for details on the format of this field.
+ 	 * 
+-	 * @param owner Ownership
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param owner
++	 *            Ownership
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setOwnership(TagContent owner) throws TagFormatException {
+ 		(new BinaryFrame(id3v2, "OWNE", owner, use_compression)).write();
+@@ -1953,7 +2102,8 @@
+ 	 * standard for details on the format of this field.
+ 	 * 
+ 	 * @return Commercial frame
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getCommercial() throws FrameDamagedException {
+ 		return BinaryFrame.read(id3v2, "COMR");
+@@ -1963,9 +2113,10 @@
+ 	 * Set commercial frame, read from binary content. See the ID3v2 informal
+ 	 * standard for details on the format of this field.
+ 	 * 
+-	 * @param commercial Commercial frame
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param commercial
++	 *            Commercial frame
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setCommercial(TagContent commercial) throws TagFormatException {
+ 		(new BinaryFrame(id3v2, "COMR", commercial, use_compression)).write();
+@@ -1975,7 +2126,8 @@
+ 	 * Read Music CD identifier, store as binary content
+ 	 * 
+ 	 * @return Music CD identifier
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getCDIdentifier() throws FrameDamagedException {
+ 		return BinaryFrame.read(id3v2, "MCDI");
+@@ -1984,9 +2136,10 @@
+ 	/**
+ 	 * Set music CD identifier, read from binary content.
+ 	 * 
+-	 * @param ident CD identifier
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param ident
++	 *            CD identifier
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setCDIdentifier(TagContent ident) throws TagFormatException {
+ 		(new BinaryFrame(id3v2, "MCDI", ident, use_compression)).write();
+@@ -1999,7 +2152,8 @@
+ 	 * identifier as binary content.
+ 	 * 
+ 	 * @return Unique file identifier
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getUniqueFileIdentifier() throws FrameDamagedException {
+ 		byte[] v2cont = Frame.read(id3v2, "UFID");
+@@ -2024,9 +2178,10 @@
+ 	 * Set unique file identifier. Owner identifier is read from description,
+ 	 * identifier from binary content.
+ 	 * 
+-	 * @param ufi Unique file identifier to set.
+-	 * @exception TagFormatException If File identifier is longer than 64
+-	 *                characters
++	 * @param ufi
++	 *            Unique file identifier to set.
++	 * @exception TagFormatException
++	 *                If File identifier is longer than 64 characters
+ 	 */
+ 	public void setUniqueFileIdentifier(TagContent ufi)
+ 			throws TagFormatException {
+@@ -2053,7 +2208,8 @@
+ 	 * text content
+ 	 * 
+ 	 * @return User defined text
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getUserDefinedText() throws FrameDamagedException {
+ 		byte[] v2cont = Frame.read(id3v2, "TXXX");
+@@ -2077,9 +2233,10 @@
+ 	 * Set user defined text information. Description is read from description,
+ 	 * value from text content.
+ 	 * 
+-	 * @param info User defined text information
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param info
++	 *            User defined text information
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setUserDefinedText(TagContent info) throws TagFormatException {
+ 		if (info.getDescription() == null || info.getTextContent() == null) {
+@@ -2104,7 +2261,8 @@
+ 	 * content
+ 	 * 
+ 	 * @return User defined URL link
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getUserDefinedURL() throws FrameDamagedException {
+ 		byte[] v2cont = Frame.read(id3v2, "WXXX");
+@@ -2128,9 +2286,10 @@
+ 	 * Set user defined URL link. Description is read from description, URL from
+ 	 * text content.
+ 	 * 
+-	 * @param link User defined URL link
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param link
++	 *            User defined URL link
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setUserDefinedURL(TagContent link) throws TagFormatException {
+ 		if (link.getDescription() == null || link.getTextContent() == null) {
+@@ -2158,7 +2317,8 @@
+ 	 * description and lyrics as text content
+ 	 * 
+ 	 * @return Unsynchronized lyrics
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getUnsynchronizedLyrics() throws FrameDamagedException {
+ 		byte[] v2cont = Frame.read(id3v2, "USLT");
+@@ -2187,9 +2347,10 @@
+ 	 * Set unsynchronized lyrics. Language is read from type, Description from
+ 	 * description, lyrics from text content.
+ 	 * 
+-	 * @param lyric Unsynchronized lyrics
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param lyric
++	 *            Unsynchronized lyrics
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setUnsynchronizedLyrics(TagContent lyric)
+ 			throws TagFormatException {
+@@ -2221,7 +2382,8 @@
+ 	 * comments as text content
+ 	 * 
+ 	 * @return Comments
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getComments() throws FrameDamagedException {
+ 		TagContent ret = new TagContent();
+@@ -2256,9 +2418,10 @@
+ 	 * Set comments. Language is read from type, Description from description,
+ 	 * comments from text content.
+ 	 * 
+-	 * @param comm Comments
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param comm
++	 *            Comments
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setComments(TagContent comm) throws TagFormatException {
+ 		if (comm.getType() == null || comm.getDescription() == null
+@@ -2292,7 +2455,8 @@
+ 	 * subtype, description as description and picture data as binary content.
+ 	 * 
+ 	 * @return Picture
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getPicture() throws FrameDamagedException {
+ 		byte[] v2cont = Frame.read(id3v2, "APIC");
+@@ -2319,9 +2483,10 @@
+ 	 * binary subtype, description from description, picture data from binary
+ 	 * content.
+ 	 * 
+-	 * @param pic Picture
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param pic
++	 *            Picture
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setPicture(TagContent pic) throws TagFormatException {
+ 		if (pic.getType() == null || pic.getBinarySubtype() == null
+@@ -2354,7 +2519,8 @@
+ 	 * text subtype, description as description and object as binary content.
+ 	 * 
+ 	 * @return Object
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getEncapsulatedObject() throws FrameDamagedException {
+ 		byte[] v2cont = Frame.read(id3v2, "GEOB");
+@@ -2380,9 +2546,10 @@
+ 	 * Set general encapsulated object. MIME type is read from type, filename
+ 	 * from subtype, description from description, object from binary content.
+ 	 * 
+-	 * @param obj Object
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param obj
++	 *            Object
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setEncapsulatedObject(TagContent obj) throws TagFormatException {
+ 		if (obj.getType() == null || obj.getTextSubtype() == null
+@@ -2418,7 +2585,8 @@
+ 	 * content
+ 	 * 
+ 	 * @return Terms of use
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getTermsOfUse() throws FrameDamagedException {
+ 		byte[] v2cont = Frame.read(id3v2, "USER");
+@@ -2446,9 +2614,10 @@
+ 	 * Set terms of use. Language is read from type, terms of use from text
+ 	 * content.
+ 	 * 
+-	 * @param use Terms of use
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param use
++	 *            Terms of use
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setTermsOfUse(TagContent use) throws TagFormatException {
+ 		if (use.getType() == null || use.getTextContent() == null
+@@ -2474,7 +2643,8 @@
+ 	 * method symbol as binary subtype and encryption data as binary content.
+ 	 * 
+ 	 * @return Encryption method registration
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getEncryptionMethodRegistration()
+ 			throws FrameDamagedException {
+@@ -2501,9 +2671,10 @@
+ 	 * method symbol from binary subtype and encryption data from binary
+ 	 * content.
+ 	 * 
+-	 * @param encr Encryption method
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param encr
++	 *            Encryption method
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setEncryptionMethodRegistration(TagContent encr)
+ 			throws TagFormatException {
+@@ -2531,7 +2702,8 @@
+ 	 * content.
+ 	 * 
+ 	 * @return Group identification registration
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getGroupIdentificationRegistration()
+ 			throws FrameDamagedException {
+@@ -2558,9 +2730,10 @@
+ 	 * type, group symbol from binary subtype and group dependent data from
+ 	 * binary content.
+ 	 * 
+-	 * @param grp Group identification
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param grp
++	 *            Group identification
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setGroupIdentificationRegistration(TagContent grp)
+ 			throws TagFormatException {
+@@ -2587,7 +2760,8 @@
+ 	 * content.
+ 	 * 
+ 	 * @return Private data
+-	 * @exception FrameDamagedException If frame is damaged (e.g. too short)
++	 * @exception FrameDamagedException
++	 *                If frame is damaged (e.g. too short)
+ 	 */
+ 	public TagContent getPrivateData() throws FrameDamagedException {
+ 		byte[] v2cont = Frame.read(id3v2, "PRIV");
+@@ -2611,9 +2785,10 @@
+ 	 * Set private data. Owner identifier is read from type, private data from
+ 	 * binary content.
+ 	 * 
+-	 * @param data Private data
+-	 * @exception TagFormatException If information to set is not correctly
+-	 *                formatted
++	 * @param data
++	 *            Private data
++	 * @exception TagFormatException
++	 *                If information to set is not correctly formatted
+ 	 */
+ 	public void setPrivateData(TagContent data) throws TagFormatException {
+ 		if (data.getType() == null || data.getBinaryContent() == null) {
+@@ -2679,8 +2854,10 @@
+ 	/**
+ 	 * Checks if input string is of a given length
+ 	 * 
+-	 * @param in string to check
+-	 * @param length length to check against
++	 * @param in
++	 *            string to check
++	 * @param length
++	 *            length to check against
+ 	 * @return true if the string is of the given length
+ 	 */
+ 	protected boolean checkExactLength(String in, int length) {
+@@ -2690,8 +2867,10 @@
+ 	/**
+ 	 * Checks if input string has a maximum given length
+ 	 * 
+-	 * @param in string to check
+-	 * @param length length to check against
++	 * @param in
++	 *            string to check
++	 * @param length
++	 *            length to check against
+ 	 * @return true if the string is of the given length or shorter
+ 	 */
+ 	protected boolean checkMaxLength(String in, int length) {
+@@ -2701,8 +2880,10 @@
+ 	/**
+ 	 * Checks if input byte array is of a given length
+ 	 * 
+-	 * @param in byte array to check
+-	 * @param length length to check against
++	 * @param in
++	 *            byte array to check
++	 * @param length
++	 *            length to check against
+ 	 * @return true if the array is of the given length
+ 	 */
+ 	protected boolean checkExactLength(byte[] in, int length) {
+@@ -2712,8 +2893,10 @@
+ 	/**
+ 	 * Checks if input byte array has a maximum given length
+ 	 * 
+-	 * @param in byte array to check
+-	 * @param length length to check against
++	 * @param in
++	 *            byte array to check
++	 * @param length
++	 *            length to check against
+ 	 * @return true if the array is of the given length or has less elements
+ 	 */
+ 	protected boolean checkMaxLength(byte[] in, int length) {
+@@ -2723,7 +2906,8 @@
+ 	/**
+ 	 * Checks if input string is numeric
+ 	 * 
+-	 * @param in string to check
++	 * @param in
++	 *            string to check
+ 	 * @return true if the array is numeric
+ 	 */
+ 	protected boolean checkNumeric(String in) {
+@@ -2739,14 +2923,16 @@
+ 	/**
+ 	 * Initialization code, called by all constructors
+ 	 * 
+-	 * @exception IOException If I/O error occurs
+-	 * @exception NoMP3FrameException If file does not contain at least one mp3
+-	 *                frame
+-	 * @exception ID3v2WrongCRCException If the ID3v2 tag fails CRC
+-	 * @exception ID3v2DecompressionException If the ID3v2 tag cannot be
+-	 *                decompressed
+-	 * @exception ID3v2IllegalVersionException If the ID3v2 tag has a wrong (too
+-	 *                high) version
++	 * @exception IOException
++	 *                If I/O error occurs
++	 * @exception NoMP3FrameException
++	 *                If file does not contain at least one mp3 frame
++	 * @exception ID3v2WrongCRCException
++	 *                If the ID3v2 tag fails CRC
++	 * @exception ID3v2DecompressionException
++	 *                If the ID3v2 tag cannot be decompressed
++	 * @exception ID3v2IllegalVersionException
++	 *                If the ID3v2 tag has a wrong (too high) version
+ 	 */
+ 	protected void init() throws IOException, NoMP3FrameException,
+ 			ID3v2WrongCRCException, ID3v2DecompressionException,

@@ -7,7 +7,7 @@
 	<key>CFBundleGetInfoString</key>
 	<string>ID3TagMan</string>
 	<key>CFBundleIconFile</key>
-	<string>coffee_cup.icns</string>
+	<string>tag_green.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>net.eclipseforum.id3tagman</string>
 	<key>CFBundleInfoDictionaryVersion</key>

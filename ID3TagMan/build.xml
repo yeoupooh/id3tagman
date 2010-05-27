@@ -13,7 +13,7 @@
     </description>
 
 	<property name="app.name" value="ID3TagMan" />
-	<property name="app.version" value="0.2" />
+	<property name="app.version" value="0.3" />
 
 	<property name="src.dir" value="src" />
 	<property name="lib.dir" value="lib" />

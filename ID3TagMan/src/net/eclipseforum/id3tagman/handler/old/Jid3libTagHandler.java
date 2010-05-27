@@ -1,4 +1,4 @@
-package net.eclipseforum.id3tagman.handler;
+package net.eclipseforum.id3tagman.handler.old;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class Jid3libTagHandler implements ITagHandler {
 						value = mp3file.getID3v1Tag().getAlbum();
 						break;
 
-					case AlbumTitle:
+					case AlbumArtist:
 						value = mp3file.getID3v1Tag().getAlbumTitle();
 						break;
 
@@ -42,7 +42,7 @@ public class Jid3libTagHandler implements ITagHandler {
 						value = mp3file.getID3v1Tag().getTrackNumberOnAlbum();
 						break;
 
-					case Authors:
+					case Composer:
 						value = mp3file.getID3v1Tag().getAuthorComposer();
 						break;
 
@@ -69,7 +69,7 @@ public class Jid3libTagHandler implements ITagHandler {
 						value = file.getName();
 						break;
 
-					case AlbumTitle:
+					case AlbumArtist:
 						value = mp3file.getID3v2Tag().getAlbumTitle();
 						break;
 
@@ -77,7 +77,7 @@ public class Jid3libTagHandler implements ITagHandler {
 						value = mp3file.getID3v2Tag().getTrackNumberOnAlbum();
 						break;
 
-					case Authors:
+					case Composer:
 						value = mp3file.getID3v2Tag().getAuthorComposer();
 						break;
 
@@ -133,7 +133,7 @@ public class Jid3libTagHandler implements ITagHandler {
 	}
 
 	public String getName() {
-		return "Java ID3 Tag Library";
+		return "Java ID3 Tag Library (http://javamusictag.sourceforge.net/)";
 	}
 
 }

@@ -1,4 +1,5 @@
 package net.eclipseforum.id3tagman.util;
+
 import java.io.UnsupportedEncodingException;
 
 public class StringConverter {

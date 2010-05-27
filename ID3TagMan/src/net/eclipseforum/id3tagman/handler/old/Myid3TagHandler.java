@@ -1,4 +1,4 @@
-package net.eclipseforum.id3tagman.handler;
+package net.eclipseforum.id3tagman.handler.old;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class Myid3TagHandler implements ITagHandler {
 					value = metadata.getSimplified().getTrackNumberFormatted();
 					break;
 
-				case Authors:
+				case Composer:
 					value = metadata.getSimplified().getComposer();
 					break;
 

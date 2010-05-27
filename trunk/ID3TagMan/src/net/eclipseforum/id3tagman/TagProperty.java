@@ -1,8 +1,9 @@
 package net.eclipseforum.id3tagman;
+
 public class TagProperty {
 	public enum IDs {
-		FileName(0), Title(1), TrackNumber(2), Artist(3), Album(4), AlbumTitle(
-				5), Genre(6), Authors(7), Comment(8);
+		FileName(0), Title(1), TrackNumber(2), Artist(3), Album(4), AlbumArtist(
+				5), Genre(6), Composer(7), Comment(8), Year(9);
 
 		private int index;
 

@@ -1,14 +1,14 @@
-package net.eclipseforum.id3tagman.handler;
+package net.eclipseforum.id3tagman.handler.old;
 
 import java.io.File;
 
 import net.eclipseforum.id3tagman.TagProperty.IDs;
 
-// http://jid3.blinkenlights.org/
-public class JID3TagHanlder implements ITagHandler {
+// http://www.javazoom.net/javalayer/javalayer.html
+public class JLayerTagHandler implements ITagHandler {
 
 	public String getName() {
-		return "JID3 - A JavaTM ID3 Class Library Implementation";
+		return "JLayer - MP3 library";
 	}
 
 	public String getProperty(IDs id) throws TagPropertyException {

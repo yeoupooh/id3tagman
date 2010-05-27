@@ -1,4 +1,4 @@
-package net.eclipseforum.id3tagman.handler;
+package net.eclipseforum.id3tagman.handler.old;
 
 public class CannotInitTagHandlerException extends Exception {
 	/**

@@ -2,12 +2,12 @@ package net.eclipseforum.id3tagman;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.Iterator;
+import java.util.Set;
 
-import net.eclipseforum.id3tagman.handler.ITagHandler;
-import net.eclipseforum.id3tagman.handler.Javamp3TagHandler;
-import net.eclipseforum.id3tagman.handler.Jid3libTagHandler;
-import net.eclipseforum.id3tagman.handler.TagHandlerException;
-import net.eclipseforum.id3tagman.handler.TagPropertyException;
+import net.eclipseforum.id3tagman.handler.ID3TagHandlerException;
+import net.eclipseforum.id3tagman.handler.ID3TagHandlerFactory;
+import net.eclipseforum.id3tagman.handler.IID3TagHandler;
 import net.eclipseforum.id3tagman.util.StringConverter;
 
 import org.eclipse.swt.SWT;
@@ -57,17 +57,14 @@ public class ID3TagManGUI implements SelectionListener {
 			new TagProperty(TagProperty.IDs.TrackNumber, "Track number", 30),
 			new TagProperty(TagProperty.IDs.Artist, "Artist", 80),
 			new TagProperty(TagProperty.IDs.Album, "Album", 80),
-			new TagProperty(TagProperty.IDs.AlbumTitle, "Album title", 80),
+			new TagProperty(TagProperty.IDs.AlbumArtist, "Album artist", 80),
 			new TagProperty(TagProperty.IDs.Genre, "Genre", 80),
-			new TagProperty(TagProperty.IDs.Authors, "Authors", 80),
-			new TagProperty(TagProperty.IDs.Comment, "Comment", 80) };
+			new TagProperty(TagProperty.IDs.Composer, "Composer", 80),
+			new TagProperty(TagProperty.IDs.Comment, "Comment", 80),
+			new TagProperty(TagProperty.IDs.Year, "Year", 80) };
 
-	private ITagHandler[] handlers = { new Javamp3TagHandler(),
-			new Jid3libTagHandler()
-	// , new JaudiotaggerTagHandler()
-	// new Myid3TagHandler()
-	};
-	private ITagHandler currentHandler = null;
+	private ID3TagHandlerFactory factory = ID3TagHandlerFactory.getInstance();
+	private String selectedHandlerName = null;
 
 	/**
 	 * 
@@ -77,6 +74,9 @@ public class ID3TagManGUI implements SelectionListener {
 		{
 			File file = new File("./");
 			System.out.println("path=" + file.getAbsolutePath());
+			if (System.getProperty("app.root") == null) {
+				System.setProperty("app.root", file.getAbsolutePath());
+			}
 			System.out.println("BASEDIR=" + System.getProperty("app.root"));
 		}
 		// TODO Auto-generated method stub
@@ -170,12 +170,14 @@ public class ID3TagManGUI implements SelectionListener {
 		textFolder.pack();
 
 		comboHandler = new Combo(sShell, SWT.READ_ONLY);
-		for (int j = 0; j < handlers.length; j++) {
-			comboHandler.add(handlers[j].getName());
+		Set<String> names = factory.getHandlerNames();
+		Iterator<String> iterator = names.iterator();
+		while (iterator.hasNext()) {
+			comboHandler.add(iterator.next());
 		}
+		comboHandler.addSelectionListener(this);
 		comboHandler.select(0);
 		setHandler(0);
-		comboHandler.addSelectionListener(this);
 
 		textSrcEncoding = new Text(sShell, SWT.NONE);
 		textSrcEncoding.setLayoutData(gridDataTextFolder);
@@ -213,7 +215,8 @@ public class ID3TagManGUI implements SelectionListener {
 	}
 
 	private void setHandler(int index) {
-		currentHandler = handlers[index];
+		// currentHandler = handlers[index];
+		selectedHandlerName = comboHandler.getText();
 	}
 
 	private void updateTable() {
@@ -235,15 +238,17 @@ public class ID3TagManGUI implements SelectionListener {
 					.getText(), textDestEncoding.getText());
 
 			try {
-				currentHandler.load(file);
+				IID3TagHandler handler = factory
+						.getHandler(selectedHandlerName);
+				handler.load(file.getAbsolutePath());
 				for (int j = 0; j < tagProperties.length; j++) {
 					TagProperty prop = tagProperties[j];
 					String value = null;
 					String convValue = null;
 					try {
-						value = currentHandler.getProperty(prop.getId());
-					} catch (TagPropertyException e) {
-						// TODO Auto-generated catch block
+						value = handler.getProperty(prop.getId());
+					} catch (ID3TagHandlerException e) {
+						setStatusMessage(e.getMessage());
 						e.printStackTrace();
 					}
 
@@ -262,10 +267,9 @@ public class ID3TagManGUI implements SelectionListener {
 						}
 					}
 				}
-			} catch (TagHandlerException e1) {
-				e1.printStackTrace();
-			} catch (Exception e1) {
-				e1.printStackTrace();
+			} catch (ID3TagHandlerException e) {
+				showErrorMessageBox(e);
+				e.printStackTrace();
 			}
 		}
 
@@ -298,7 +302,7 @@ public class ID3TagManGUI implements SelectionListener {
 	private void about() {
 		MessageBox mbox = new MessageBox(sShell, SWT.ICON_QUESTION | SWT.YES
 				| SWT.NO);
-		mbox.setMessage("Do you want to go Developer's twitter?");
+		mbox.setMessage("Did you enjoy it? Then say something to me.");
 		if (mbox.open() == SWT.YES) {
 			Program.launch("http://twitter.com/yeoupooh");
 		}
@@ -338,25 +342,28 @@ public class ID3TagManGUI implements SelectionListener {
 				boolean isSuccess = false;
 				File file = (File) item.getData();
 				setStatusMessage("Converting..." + file.getName());
+
 				try {
-					currentHandler.load(file);
+					IID3TagHandler handler = factory
+							.getHandler(selectedHandlerName);
+					handler.load(file.getAbsolutePath());
 					for (int j = 0; j < tagProperties.length; j++) {
 						TagProperty prop = tagProperties[j];
 						System.out.println(prop.getId() + "="
 								+ item.getText(prop.getId().index()));
 						if (item.getText(prop.getId().index()) != null) {
-							currentHandler.setProperty(prop.getId(), item
-									.getText(prop.getId().index()));
+							handler.setProperty(prop.getId(), item.getText(prop
+									.getId().index()));
 						}
 					}
-					currentHandler.save();
+					handler.save();
 					isSuccess = true;
-				} catch (TagHandlerException e) {
-					e.printStackTrace();
+				} catch (NullPointerException e) {
 					showErrorMessageBox(e);
-				} catch (TagPropertyException e) {
 					e.printStackTrace();
+				} catch (ID3TagHandlerException e) {
 					showErrorMessageBox(e);
+					e.printStackTrace();
 				}
 
 				if (isSuccess == true) {

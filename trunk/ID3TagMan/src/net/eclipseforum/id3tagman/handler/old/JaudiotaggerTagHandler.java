@@ -1,4 +1,4 @@
-package net.eclipseforum.id3tagman.handler;
+package net.eclipseforum.id3tagman.handler.old;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +17,7 @@ import org.jaudiotagger.tag.TagException;
 public class JaudiotaggerTagHandler implements ITagHandler {
 
 	private MP3File mp3File = null;
+	@SuppressWarnings("unused")
 	private MP3AudioHeader header = null;
 
 	public String getName() {

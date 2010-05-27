@@ -1,9 +1,11 @@
-package net.eclipseforum.id3tagman.handler;
+package net.eclipseforum.id3tagman.handler.impl;
 
 import java.io.File;
 import java.io.IOException;
 
 import net.eclipseforum.id3tagman.TagProperty.IDs;
+import net.eclipseforum.id3tagman.handler.ID3TagHandlerException;
+import net.eclipseforum.id3tagman.handler.IID3TagHandler;
 import de.vdheide.mp3.FrameDamagedException;
 import de.vdheide.mp3.ID3Exception;
 import de.vdheide.mp3.ID3v2DecompressionException;
@@ -21,12 +23,12 @@ import de.vdheide.mp3.TagFormatException;
  * @author yeoupooh
  * 
  */
-public class Javamp3TagHandler implements ITagHandler {
+public class Javamp3ID3TagHandler implements IID3TagHandler {
 
-	private MP3File mp3file = null;
 	private File file = null;
+	private MP3File mp3file = null;
 
-	public String getProperty(IDs id) throws TagPropertyException {
+	public String getProperty(IDs id) throws ID3TagHandlerException {
 		String value = null;
 
 		if (mp3file != null) {
@@ -56,7 +58,7 @@ public class Javamp3TagHandler implements ITagHandler {
 					value = mp3file.getTrack().getTextContent();
 					break;
 
-				case Authors:
+				case Composer:
 					value = mp3file.getComposer().getTextContent();
 					break;
 
@@ -66,49 +68,50 @@ public class Javamp3TagHandler implements ITagHandler {
 
 				}
 			} catch (FrameDamagedException e) {
-				throw new TagPropertyException(e);
+				throw new ID3TagHandlerException(e);
 			}
 		}
 
 		return value;
 	}
 
-	public void load(File file) throws TagHandlerException {
-		this.file = file;
+	public void load(String fileName) throws ID3TagHandlerException {
+
+		this.file = new File(fileName);
 
 		try {
 			mp3file = new MP3File(file.getAbsolutePath());
 		} catch (ID3v2WrongCRCException e) {
-			throw new TagHandlerException(e);
+			throw new ID3TagHandlerException(e);
 		} catch (ID3v2DecompressionException e) {
-			throw new TagHandlerException(e);
+			throw new ID3TagHandlerException(e);
 		} catch (ID3v2IllegalVersionException e) {
-			throw new TagHandlerException(e);
+			throw new ID3TagHandlerException(e);
 		} catch (IOException e) {
-			throw new TagHandlerException(e);
+			throw new ID3TagHandlerException(e);
 		} catch (NoMP3FrameException e) {
-			throw new TagHandlerException(e);
+			throw new ID3TagHandlerException(e);
 		} catch (Exception e) {
-			throw new TagHandlerException(e);
+			throw new ID3TagHandlerException(e);
 		}
 	}
 
-	public void save() throws TagHandlerException {
+	public void save() throws ID3TagHandlerException {
 		try {
 			TagContent content = new TagContent();
 			content.setContent("UTF-8");
 			mp3file.setEncodedBy(content);
 			mp3file.update();
 		} catch (ID3Exception e) {
-			throw new TagHandlerException(e);
+			throw new ID3TagHandlerException(e);
 		} catch (ID3v2Exception e) {
-			throw new TagHandlerException(e);
+			throw new ID3TagHandlerException(e);
 		} catch (TagFormatException e) {
-			throw new TagHandlerException(e);
+			throw new ID3TagHandlerException(e);
 		}
 	}
 
-	public void setProperty(IDs id, String value) throws TagPropertyException {
+	public void setProperty(IDs id, String value) throws ID3TagHandlerException {
 		if (mp3file != null && mp3file.canWrite() == true && value != null
 				&& value.length() > 0) {
 			TagContent content = new TagContent();
@@ -116,7 +119,7 @@ public class Javamp3TagHandler implements ITagHandler {
 			try {
 				switch (id) {
 				case FileName:
-					// value = file.getName();
+					value = file.getName();
 					break;
 
 				case Album:
@@ -139,7 +142,7 @@ public class Javamp3TagHandler implements ITagHandler {
 					mp3file.setTrack(content);
 					break;
 
-				case Authors:
+				case Composer:
 					mp3file.setComposer(content);
 					break;
 
@@ -152,16 +155,11 @@ public class Javamp3TagHandler implements ITagHandler {
 
 			} catch (TagFormatException e) {
 				System.err.println("id=" + id);
-				throw new TagPropertyException(e);
+				throw new ID3TagHandlerException(e);
 			} catch (Exception e) {
-				throw new TagPropertyException(e);
+				throw new ID3TagHandlerException(e);
 			}
-
 		}
-	}
-
-	public String getName() {
-		return "java_mp3";
 	}
 
 }

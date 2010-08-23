@@ -1956,3 +1956,20 @@ Index: src/de/vdheide/mp3/MP3File.java
  	 */
  	protected void init() throws IOException, NoMP3FrameException,
  			ID3v2WrongCRCException, ID3v2DecompressionException,
+Index: src/de/vdheide/utils/File.java
+===================================================================
+--- src/de/vdheide/utils/File.java	(revision 20)
++++ src/de/vdheide/utils/File.java	(working copy)
+@@ -155,9 +155,9 @@
+         new java.io.FileOutputStream(tempFile).close();
+ 
+         // debugging peek at the name generated.
+-        if (false) {
+-            System.out.println(tempFile.getCanonicalPath());
+-        }
++//        if (false) {
++//            System.out.println(tempFile.getCanonicalPath());
++//        }
+ 
+         return tempFile;
+     }

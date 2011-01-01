@@ -47,6 +47,8 @@ public class JaudiotaggerID3TagHandler implements IID3TagHandler {
 			case Year:
 				return tag.getFirst(TagFieldKey.YEAR);
 			}
+		} catch (NullPointerException e) {
+			throw new ID3TagHandlerException(e);
 		} catch (UnsupportedOperationException e) {
 			throw new ID3TagHandlerException(e);
 		}

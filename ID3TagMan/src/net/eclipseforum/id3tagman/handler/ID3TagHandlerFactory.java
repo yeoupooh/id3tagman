@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Set;
 
 import net.eclipseforum.id3tagman.handler.impl.JaudiotaggerID3TagHandler;
+import net.eclipseforum.id3tagman.handler.impl.JaudiotaggerID3v24TagHandler;
+import net.eclipseforum.id3tagman.handler.impl.Javamp3ID3TagHandler;
 
 public class ID3TagHandlerFactory {
 	private static ID3TagHandlerFactory instance = null;
@@ -13,8 +15,10 @@ public class ID3TagHandlerFactory {
 
 	public ID3TagHandlerFactory() {
 		// handlers.put("Test", TestID3TagHandler.class);
-		// handlers.put("Javamp3", Javamp3ID3TagHandler.class);
+		handlers.put("Javamp3", Javamp3ID3TagHandler.class);
 		handlers.put("Jaudiotagger", JaudiotaggerID3TagHandler.class);
+		handlers.put("Jaudiotagger ID3 v2.4",
+				JaudiotaggerID3v24TagHandler.class);
 	}
 
 	public static ID3TagHandlerFactory getInstance() {

@@ -10,18 +10,19 @@ import net.eclipseforum.id3tagman.handler.IID3TagHandler;
 
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.audio.mp3.MP3File;
 import org.jaudiotagger.tag.FieldDataInvalidException;
-import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.TagFieldKey;
+import org.jaudiotagger.tag.id3.ID3v24Tag;
 
-public class JaudiotaggerID3TagHandler implements IID3TagHandler {
+public class JaudiotaggerID3v24TagHandler implements IID3TagHandler {
 
-	private MP3File mp3File = null;
-	private Tag tag = null;
+	private ID3v24Tag tag;
+	private MP3File mp3File;
 
 	public String getProperty(IDs id) throws ID3TagHandlerException {
 		try {
@@ -36,8 +37,8 @@ public class JaudiotaggerID3TagHandler implements IID3TagHandler {
 				return tag.getFirst(TagFieldKey.ARTIST);
 			case Genre:
 				return tag.getFirst(TagFieldKey.GENRE);
-				// case TrackNumber:
-				// return tag.getFirst(TagFieldKey.TRACK);
+			case TrackNumber:
+				return tag.getFirst(TagFieldKey.TRACK);
 			case AlbumArtist:
 				return tag.getFirst(TagFieldKey.ALBUM_ARTIST);
 			case Composer:
@@ -59,7 +60,10 @@ public class JaudiotaggerID3TagHandler implements IID3TagHandler {
 	public void load(String fileName) throws ID3TagHandlerException {
 		try {
 			mp3File = (MP3File) AudioFileIO.read(new File(fileName));
-			tag = mp3File.getTag();
+			tag = mp3File.getID3v2TagAsv24();
+			if (tag == null) {
+				tag = new ID3v24Tag();
+			}
 		} catch (CannotReadException e) {
 			e.printStackTrace();
 			throw new ID3TagHandlerException(e);
@@ -80,10 +84,9 @@ public class JaudiotaggerID3TagHandler implements IID3TagHandler {
 
 	public void save() throws ID3TagHandlerException {
 		try {
-			mp3File.save();
-		} catch (IOException e) {
-			throw new ID3TagHandlerException(e);
-		} catch (TagException e) {
+			mp3File.setID3v2Tag(tag);
+			mp3File.commit();
+		} catch (CannotWriteException e) {
 			throw new ID3TagHandlerException(e);
 		}
 	}
@@ -106,9 +109,9 @@ public class JaudiotaggerID3TagHandler implements IID3TagHandler {
 			case Genre:
 				tag.setGenre(value);
 				break;
-			// case TrackNumber:
-			// tag.setTrack(value);
-			//		break;
+			case TrackNumber:
+				tag.setTrack(value);
+				break;
 			case AlbumArtist:
 				tag.setArtist(value);
 				break;
